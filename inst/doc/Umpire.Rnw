@@ -1,0 +1,420 @@
+% NOTE -- ONLY EDIT THE .Rnw FILE!!!  The .tex file is
+% likely to be overwritten.
+%
+%\VignetteIndexEntry{Umpire Primer}
+%\VignetteKeywords{Simulation, Microarray}
+%\VignetteDepends{methods, stats, utils, graphics, grDevices}
+%\VignettePackage{Umpire}
+
+\documentclass[11pt]{article}
+\usepackage{graphicx}
+\usepackage{cite}
+\usepackage{hyperref}
+\usepackage{color}
+\usepackage{multirow}
+\pagestyle{myheadings}
+\markright{Umpire}
+
+\setlength{\topmargin}{0in}
+\setlength{\textheight}{8in}
+\setlength{\textwidth}{6.5in}
+\setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in}
+
+\def\rcode#1{\texttt{#1}}
+\def\rpkg#1{\texttt{#1}}
+\def\fref#1{\textbf{Figure~\ref{#1}}}
+\def\tref#1{\textbf{Table~\ref{#1}}}
+\def\sref#1{\textbf{Section~\ref{#1}}}
+
+\title{Umpire: The Ultimate Microarray Prediction, Inference, and
+  Reality Engine}
+\author{Jiexin Zhang and Kevin R. Coombes}
+\date{14 July 2009}
+
+\begin{document}
+<<echo=FALSE>>=
+options(width=88)
+options(SweaveHooks = list(fig = function() par(bg='white')))
+if (!file.exists("Figures")) dir.create("Figures")
+set.seed(774247)
+@ 
+\SweaveOpts{prefix.string=Figures/simu7}
+
+\maketitle
+%\tableofcontents
+%\listoffigures
+
+\section{Introduction}
+
+Version 1.0 of the Ultimate Microarray Prediction, Inference, and
+Reality Engine (Umpire) is an R package that allows researchers to
+simulate complex, realistic microarray data.  Statisticians and
+bioinformaticians who develop and improve methods to analze microarray
+data recognize that it is difficult to evaluate methods on real data
+where ``ground truth'' is unknown, and they frequently turn to
+simulations where they can control the true underlying structure.  In
+many instances, however, the simulations that have been performed are
+rather simplistic.  Often, genes are treated as independent, in spite
+of the elaborate correlation structures that give rise to networks and
+pathways in real biology.  Differential epxression is frequently
+simulated using two homogeneous groups following nearly perfect normal
+distributions, with the amount of differential expression identical
+for all genes.  The \rpkg{Umpire} package, which is invoked by the command
+<<lib>>=
+library(Umpire)
+@ 
+provides tools that allow users to simulate microarray data from a
+more realistic model.
+
+\section{The gene expression model}
+\subsection{Engines}
+
+The fundamental object in \rpkg{Umpire} is a ``random-vector
+generator'' (RVG), which is represented by the \rcode{Engine} class.
+Equivalently, each \rcode{Engine} object represents a specific
+multivariate distribution, from which random vectors can be generated
+using the generic \rcode{rand} method.  In Version 1.0 of
+\rpkg{Umpire}, we include three basic building blocks for these kinds
+of distributions: independent normal, independent log normal, and
+multivariate normal.  The following example creates an object that
+will generate vectors of length $3$.
+<<indn>>=
+nGenes <- 3
+means <- rnorm(nGenes, 6, 1)
+sds <- 1/rgamma(nGenes, rate=14, shape=6)
+indn <- IndependentNormal(means, sds)
+summary(indn)
+indn
+@ 
+Now we generate five vectors from this distribution.
+<<randn>>=
+x <- rand(indn, 5)
+x
+@
+
+We use a similar method to create an object that generates independent
+log normal data.
+<<indn>>=
+nGenes <- 4
+logmu <- rnorm(nGenes, 6, 1)
+logsigma <- 1/rgamma(nGenes, rate=14, shape=6)
+indLN <- IndependentLogNormal(logmu, logsigma)
+indLN
+@ 
+
+In order to create a multivariate normal RVG, we must specify the mean
+vector and the covariance matrix.  Here we start with the correlation
+matrix for a simple two-dimensional RVG.
+<<mvn>>=
+a <- runif(1)
+b <- sqrt(1-a^2)
+X <- matrix(c(a, b, -b, a), 2, 2)
+@ 
+Next, we choose random positive squared-eigenvalues.
+<<mvn2>>=
+Lambda2 <- diag(rev(sort(rexp(2))), 2)
+@ 
+We combine these into a covariance matrix.
+<<mvn3>>=
+Y <- t(X) %*% Lambda2 %*% X
+@ 
+Finally, we use the MVN constructor
+<<mvn4>>=
+mvn <- MVN(c(0,0), Y)
+@ 
+and use it to generate five random vectors.
+<<mvn5>>=
+x <- rand(mvn, 5)
+@ 
+
+A general \rcode{Engine} is a list of RVG components, like those just
+created from the \rcode{IndependentNormal} or \rcode{MVN}
+constructors.  For example, we can create an RVG Engine with two
+components using the command:
+<<eng>>=
+engine <- Engine(list(indn, mvn))
+summary(engine)
+@ 
+<<data>>=
+data <- rand(engine, 5)
+data
+@ 
+
+\section{Additive and Multiplicative Noise}
+
+We model the observed signal, $Y_{gi}$, for gene $g$ in sample $i$ as: 
+\[Y_{gi} = S_{gi} * exp(H_{gi}) + E_{gi}\]
+where
+\[S_{gi} = \mbox{true biological signal}\]
+\[H_{gi} = \mbox{multiplicative noise}\]
+\[E_{gi} = \mbox{additive noise}\]
+
+The noise model represents technical noise that is layered on top of
+any biological variability when measuring gene expression in a set of
+samples.  For example, background noise is usually additive to the
+signal, and the variation between the signal pixels, which is
+independent of the magnitude of the signal, is the representative
+multiplicative noise~\cite{pmid11595791}.  We modeled both additive
+and multiplicative noise as normal distribution:
+\[E_{gi} \sim \mbox{Normal}(\nu,\tau)\]
+\[H_{gi} \sim \mbox{Normal}(0,\phi)\]
+Note that we allow the additive noise to include a bias term ($\nu$)
+that may represent, for example, a low level of cross-hybridization
+provding some level of signal at all genes.
+
+The noise model is represented in the \rcode{Umpire} package by the
+\rcode{NoiseModel} class.  You create a \rcode{NoiseModel} object by
+supplying values for $\nu$, $\tau$, and~$\phi$.
+<<nm>>=
+noise <- NoiseModel(30, 40, 0.10)
+noise
+@ 
+Use the \rcode{blur} function to add noise to a data matrix. For
+example, 
+<<temp>>=
+ndata <- blur(noise, data)
+summary(data)
+summary(ndata)
+@ 
+
+\section{Gene Expression}
+
+Let $T_{gi}$ denote the expression of a transcriptionally active gene
+$g$ in sample $i$.  For most purposes, We allow $T_{gi}$ to follow a
+log-normal distribution ($\log(T_g) \sim Normal(\mu_g,\sigma_g$).  In a
+class of samples, the mean expression of gene $g$ on the log scale is
+denoted by $\mu_g$ and the standard deviation on the log scale is
+$\sigma_g$.  Both $\mu_g$ and $\sigma_g$ are properties of the gene
+itself and the sample class.  Suppose, for example, in a class of
+samples, that on average, $g_1$ expresses at a higher level than
+$g_2$, and the variance of $g_1$ is smaller than $g_2$. Then,
+$\mu_{g_1} > \mu_{g_2}$ and $\sigma_{g_1} < \sigma_{g_2}$.
+
+Within a given simulation, we typically place hyperdistributions on
+the log-normal parameters $\mu_g$ and $\sigma_g$.  We take $\mu_g \sim
+Normal(\mu_o, sigma_0)$ to have a normal distribution with mean
+$\mu_0$ and standard deviation $\sigma_0$. We take the $\sigma_g$ to
+have an inverse gamma distribution with $rate$ and $shape$ parameters.
+Reasonable values for the hyperparameters can be estimated from real
+data.  For instance, $\mu_0=6$ and $\sigma_0=1.5$ are typical values
+on the log scale of a microarray experiment using Affymetrix HG-U133A
+chip.  The parameters for the inverse gamma distribution are
+determined by the method of moments from thwe desired mean and
+standard deviation; we have found that a mean of $0.65$ and a standard
+deviation of $0.01$ (for which rate$ = 28.11$ and shape$ = 44.25$)
+produce reasonable data.
+
+Thus, we can create a simulation engine of this type by
+<<standard>>=
+nGenes <- 4000
+mu0 <- 6
+sigma0 <- 1.5
+rate <- 28.11
+shape <- 44.25
+logmu <- rnorm(nGenes, mu0, sigma0)
+logsigma <- 1/rgamma(nGenes, rate=rate, shape=shape)
+indLN <- IndependentLogNormal(logmu, logsigma)
+engine <- Engine(list(indLN))
+@ 
+
+\subsection{The Multi-hit Model of Cancer}
+
+The multiple hit theory of cancer was first proposed by Carl Nordling
+in 1953~\cite{nordling} and extended by Alfred Knudson in 1971.  The
+basic idea is that cancer can only result after multiple insults
+(mutations; hits) to the DNA of a cell.  
+
+\subsection{Active and Inactive Genes}
+
+We model the true biological signal $S_{gi}$, for gene $g$ in sample
+$i$, as a  mixture:
+\[S_{gi} \sim (1-z_g) *\delta_0 + z_g * T_{gi}\]
+In this model, $\delta_0$ is a point mass at zero, $z_g$ defines the
+activity state (1 = active, 0 = inactive), and $T_{gi}$ is the
+expression of a transcriptionally active gene.By allowing for some
+genes to be transcriptionally inactive, this design takes into account
+that the transcriptional activity of most genes is conditional on the
+biological context.  For example, tissue-specific genes, unlike
+housekeeping genes, only express in certain tissue samples.  Activity
+is modeled in \rcode{Umpire} using a binomial distribution, $z_g \sim
+Binom(p_0)$.  To create a simulation engine that inciorproates
+transcriptional activation, we write
+<<act>>=
+p0 <- 0.8
+engine <- EngineWithActivity(p0, list(indLN))
+summary(engine)
+@ 
+
+
+
+
+
+\subsection{ Correlated blocks of genes}
+  
+Instead of simulating genes as independent entities, we consider
+blocks of correlated genes. Biologically, genes are usually
+interconnected in networks and pathways. Often, clustering methods are
+used to group genes into correlated blocks. Thus, it is natural to
+simulate microarray experiments from the perspective of blocks. Since
+the size of the blocks and degree of correlations among genes within a
+block depend on biological condition of samples, they need to be
+simulated within a reasonable range in order to study their effect on
+the microarray data analysis. As shown in Table~\ref{tab:param}, we
+allow the mean block size, \textit{bs}, to range from 1 to 1000, and
+the sizes of gene blocks to vary around the pre-defined mean block
+size. To be more specific, the block size follow normal distribution
+with mean \textit{bs} and standard deviation $0.3*bs$. $bs=1$ is a
+special case in which standard deviation of block size = 0. Thus, when
+$bs=1$, there are no correlated blocks, which means all genes are
+independent of each other. On the other extreme, $bs=1000$
+demonstrates the situation in which the common theme is large networks
+involving many genes. We have also simulated blocks where the standard
+deviation = 0 for all mean block size, under which circumstance all
+blocks in a microarray experiments have the exactly same
+sizes. Comparing with variable block size, the setting of constant
+block size affects the variability of the parameters of
+interest. However, because we believe that the variable block size is
+more realistic, we will present in this paper only the results
+obtained from variable block size. Comparison between results from
+constant block size and from variable block size is shown in
+supplementary material.
+
+As discussed in previous paragraph, we need to simulate the
+correlation among genes within a block. The correlation matrix for a
+block $b$, $cor.matrix_b$, has 1 on the diagnal and $\rho_b$ or
+-$\rho_b$ in off-diagnal places. We allow $\rho$ to follow a beta
+distribution with parameters $p$ and $w$: $Beta(pw,(1-p)*w)$. With the
+setting of $p$ = 0.6 and $w$ = 5, most blocks are relatively highly
+correlated (mean of $\rho$ is around 0.6). The portion of negatively
+correlated genes within a block is denoted by parameter
+\textit{p.neg}. In the simplest set-up, we have all genes in the same
+block to have the same correlation $\rho_b$. Because $\rho_b$ is
+always positive, this set-up means there is not negatively correlated
+genes within a block (\textit{p.neg} = 0). In more complicated set-up,
+we allow the portion of negatively correlated genes within a block
+(\textit{p.neg}) to be supported on [0,0.5]. Thus, we have
+\textit{p.neg} = 0.5-abs(x-0.5) where x follow some beta
+distribution. Three scenarios were considered: (1) x~beta(1,1), in
+which case the \textit{p.neg} is uniformly distributed between 0 and
+0.5; (2) x~beta(5,5), in which case it is more likely that the
+\textit{p.neg} is close to 0.5; (3) x~beta(0.5,0.5), in which case it
+is more likely that the \textit{p.neg} is close to
+0. Figure~\ref{fig:param1}c shows the histogram of pair-wise
+correlations within 10000 genes and mean block size 50 when
+\textit{p.neg} is uniformly distributed between 0 and 0.5. The
+distributions of pair-wise correlations for all four \textit{p.neg}
+scenarios is shown in supplementary materials (fig:pneg)
+
+We allow the log expression values of genes in a block to follow a
+multi-variate normal (MVN) distribution. The mean for the MVN object
+is defined by $\mu_g$, and the covariance matrix is defined as the
+following: 
+\[cov.matrix[i,j] = cor.matrix[i,j] * \sigma_{g_i} * \sigma_{g_j}\]
+where $\sigma_{g_i}$ defines the standard deviation of gene $i$, which
+follows the inverse gamma distribution as described in previous
+section. $cor.matrix$ denotes the correlation matrix as described in
+previous paragraph.
+
+In previous section, we mentioned that some genes would be
+transcriptionally inactive under certain biological
+conditions. Instead of simulating this active status for each gene, we
+simulate the whole block of genes being transcriptionally active or
+inactive. This follows the argument that the whole pathway/network
+could be turned on or off under certain bioligical conditions. The
+active status of blocks for the microarray experiment follows a
+binomial distribution with parameter $\pi$ which defines the portion
+of transcriptionally inactive blocks. When a block is turned off,
+$z_g$, the status indicator, is set to be 0 for all genes in this
+block, so that the true biological signals for these genes are zero. 
+
+
+\subsection{ Normal \textit{vs} cancer samples }
+
+We simulate normal samples being a homogeneous population with
+\textit{nGenes} genes and \textit{nSamples} samples. We allow
+\textit{nSamples} to vary from 10 to 100 in order to study the effect
+of number of independent observations on various test statistics. The
+same number of cancer samples are being generated with a portion of
+differentially expressed genes. We simulate differentially expressed
+genes in cancer samples by changing their mean expression
+values. Instead of changing individual genes, we perform this mean
+altering to blocks of genes in order to simulate the affect of cancer
+pathology on certain pathway/networks. \textit{p.diff} is used to
+define the percentage of differentially expressed blocks which are
+then randomly selected from transcriptionally active blocks. We keep
+transcriptionally inactive blocks inactive in both normal and cancer
+samples in this setting. However, it is possible that an inactive
+block of genes in normal samples being turned on in cancer samples, or
+vise versa, when certain carcinogens work through pathways that are
+supposed to be off, or on, in normal samples. We will incorporate this
+level of complication in later implementations. The parameter
+$diff.mean$ denotes the absolute changes of the mean expression values
+on log scale for a block of genes. $diff.mean$ follows a gamma
+distribution with parameter $\alpha$ and $\beta$
+(Figure~\ref{fig:param1}d). The $\alpha$ and $\beta$ are both set be
+10 so that the absolute fold change on log scale is 1 (thus 2 fold
+change on raw scale), and the long tail on the right hand side of the
+distribution indicates a few genes would have large fold changes. A
+gene in the changed block is randomly assigned to be up-regulated or
+down-regulated in cancer samples. 
+
+Using parameters described above and summarized in
+Table~\ref{tab:param}, Figure~\ref{fig:param1}e shows the distribution
+of the average of log expression values of 10000 genes from 10
+simulated normal samples given the mean block size being 100. The
+bimodal profile is due to the fact that part of genes are
+transcriptionally inactive. Similarly, 10 cancer samples were
+generated with 10\% differentially expressed
+blocks. Figure~\ref{fig:param1}g shows the log mean expression values
+of these 10000 genes in normal samples verse those in cancer
+samples. Red dots represent those genes that differentially expressed
+in cancer samples. 
+
+\setcounter{table}{0}
+\begin{table}[h]
+\begin{tabular}{rrrr}
+  \hline
+\textbf{group} & \textbf{parameter} & \textbf{value} & \textbf{description}\\ \hline
+\multirow{2}{*}{log mean of true biological signal $\mu_{g}$} & $\mu_0$ & 6 & mean\\
+& $\sigma_0$ & 1.5 & std\\ \hline
+\multirow{2}{*}{log std of true biological signal $\sigma_{g}$} & \textit{sMean} & 0.65 & mean\\
+& \textit{sVar} & 0.01 & variance\\ \hline
+multiplicative noise $H_{gi}$ & $\phi$ & 0.1 & std\\ \hline
+\multirow{2}{*}{additive noise $E_{gi}$} & $\nu$ & 30 & mean\\
+& $\tau$ & 40 & std\\ \hline
+
+\multirow{2}{*}{block correlation $\rho$} & $p$ & 0.6 & beta dist. parameter 1\\
+& $w$ & 5 & beta dist. parameter 2\\ \hline
+
+\multirow{2}{*}{diff.mean} & $\alpha$ & 10 & gamma dist. parameter 1\\
+& $\beta$ & 10 & gamma dist. parameter 2\\ \hline
+
+\multirow{5}{*}{constant} & $\pi$ & 0.3 & portion of\\
+& & & transcriptionally active blocks\\
+& \textit{bs} & 1,5,10,50,100, & number of\\
+& & 250,500,1000 & genes per block size\\
+& \textit{nGenes} & 10000 & number of\\
+& & & genes in microarray experiment\\
+& \textit{nSamples} & 10,25,50,100 & number of\\
+& & & samples in each condition\\
+& \textit{p.diff} & 0.1 & portion of\\
+& & & differentially expressed genes\\ \hline
+\end{tabular}
+\caption{Parameters used in simulation}
+\label{tab:param}
+\end{table}
+
+\section{Appendix}
+
+This analysis was performed in the following directory:
+<<getwd>>=
+getwd()
+@ 
+This analysis was performed in the following software environment:
+<<si>>=
+sessionInfo()
+@ 
+
+\end{document}
+
