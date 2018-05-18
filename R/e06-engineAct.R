@@ -14,9 +14,9 @@
 # applied on the logarithmic scale.
 
 setClass("EngineWithActivity",
-         representation = list("Engine",
-           active="logical",
-           base="numeric"))
+         contains = "Engine",
+         slots = c(active="logical",
+                   base="numeric"))
 
 ## Generates an EngineWithActivity object.
 EngineWithActivity <- function(active, components, base=2) {

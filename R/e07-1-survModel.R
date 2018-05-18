@@ -5,12 +5,11 @@
 ###
 
 setClass("SurvivalModel",
-         representation=list(
-           baseHazard="numeric",
-           accrual="numeric",
-           followUp="numeric",
-           units="numeric",
-           unitName="character"))
+         slots = c(baseHazard="numeric",
+                   accrual="numeric",
+                   followUp="numeric",
+                   units="numeric",
+                   unitName="character"))
 ## JZ question: can baseHazard be an underlying hazard function?
 ## KRC: Not at present.  Might want to think about how to do this
 ##      in the future.

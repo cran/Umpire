@@ -10,9 +10,8 @@
 # components.
 
 setClass("IndependentNormal",
-         representation=list(
-           mu="numeric",
-           sigma="numeric"))
+         slots = c(mu="numeric",
+                   sigma="numeric"))
 
 ## Generates an IndependentNormal object.
 IndependentNormal <- function(mu, sigma) {

@@ -18,11 +18,10 @@
 # environment that stores the actual ENGINEs.
 
 setClass("CancerEngine",
-         representation=list(
-           cm="CancerModel",
-           base="character",
-           altered="character",
-           localenv="environment"))
+         slots = c(cm="CancerModel",
+                   base="character",
+                   altered="character",
+                   localenv="environment"))
 
 ## Generates a CancerEngine object.
 CancerEngine <- function(cm, base, altered) {

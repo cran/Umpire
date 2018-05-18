@@ -1,7 +1,7 @@
 # Copyright (C) Kevin R. Coombes, 2007-2012
 
 setClass("BlockHyperParameters",
-         representation= list(
+         slots = c(
            nExtraBlocks="numeric",    # block correlation
            meanBlockSize="numeric",   # block correlation
            sigmaBlockSize="numeric",  # block correlation

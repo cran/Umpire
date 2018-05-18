@@ -14,10 +14,9 @@
 # Note that we allow a systematic offset/bias in the additive noise model.
 
 setClass("NoiseModel",
-         representation = list(
-           additiveOffset="numeric",
-           additiveScale="numeric",
-           multiplicativeScale="numeric"))
+         slots = c(additiveOffset="numeric",
+                   additiveScale="numeric",
+                   multiplicativeScale="numeric"))
 
 setValidity("NoiseModel", function(object) {
   msg <- NULL

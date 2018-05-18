@@ -11,10 +11,9 @@
 # the pieces are stored in the object.
 
 setClass("MVN",
-         representation = list(
-           mu="numeric",
-           lambda="numeric",
-           half="matrix"))
+         slots = c(mu="numeric",
+                   lambda="numeric",
+                   half="matrix"))
 
 ## Generates an MVN object.
 MVN <- function(mu, Sigma, tol=1e-06) {

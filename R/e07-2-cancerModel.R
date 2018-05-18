@@ -26,14 +26,13 @@
 # some prevalence.
 
 setClass("CancerModel",
-         representation = list(
-           name="character",
-           hitPattern="matrix",
-           survivalBeta="numeric",
-           outcomeBeta="numeric",
-           prevalence="numeric",
-           survivalModel="SurvivalModel",
-           call="call"))
+         slots = c(name="character",
+                   hitPattern="matrix",
+                   survivalBeta="numeric",
+                   outcomeBeta="numeric",
+                   prevalence="numeric",
+                   survivalModel="SurvivalModel",
+                   call="call"))
 
 # We define a general-purpose generator for cancer models.
 #   nPossible = number of possible hits = number of rows in

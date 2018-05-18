@@ -21,7 +21,7 @@
 # for a homogenous population; effects of cancer on gene
 # expression are modeled at a higher level.
 
-setClass("Engine", representation=list(components="list"))
+setClass("Engine", slots = c(components="list"))
 
 Engine <- function(components) {
   new("Engine", components=components)

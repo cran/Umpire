@@ -6,9 +6,8 @@
 # value follows a log normal distribution in our model.
 
 setClass("IndependentLogNormal",
-         representation = list(
-           logmu="numeric",
-           logsigma="numeric"))
+         slots = c(logmu="numeric",
+                   logsigma="numeric"))
 
 ## Generates an IndependentLogNormal object.
 IndependentLogNormal <- function(logmu, logsigma) {
