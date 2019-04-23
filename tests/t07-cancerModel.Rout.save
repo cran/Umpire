@@ -1,0 +1,92 @@
+
+R version 3.5.1 (2018-07-02) -- "Feather Spray"
+Copyright (C) 2018 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(Umpire)
+> # set seed to ensure reproducibility
+> RNGversion("3.5.3")
+> set.seed(539586)
+> # create a cancer model
+> x <- CancerModel('test', 30, 10,
++                  HIT  = function(n) 3+rbinom(1, 4, 0.7),
++                  SURV = function(n) rnorm(n, 0, 2),
++                  OUT  = function(n) rnorm(n, 0, 2))
+> # describe the model
+> print(paste('Number of patterns:', nPatterns(x), '(should equal 10)'))
+[1] "Number of patterns: 10 (should equal 10)"
+> print(paste('Number of hits:', nPossibleHits(x), '(should equal 30)'))
+[1] "Number of hits: 30 (should equal 30)"
+> print(nHitsPerPattern(x))
+ [1] 6 5 7 6 4 3 7 6 6 7
+> summary(x)
+test , a CancerModel object constructed via the function call:
+ CancerModel(name = "test", nPossible = 30, nPattern = 10, HIT = function(n) 3 + rbinom(1, 4, 0.7), SURV = function(n) rnorm(n, 0, 2), OUT = function(n) rnorm(n, 0, 2)) 
+
+Pattern prevalences:
+ [1] 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1
+
+Survival effects:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+-3.8881 -1.0784 -0.2658 -0.3926  0.9417  2.9427 
+
+Outcome effects:
+    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+-3.42001 -1.58186 -0.22381  0.04591  1.31585  4.61663 
+> # check correlation
+> cor(survivalCoefficients(x), outcomeCoefficients(x))
+[1] -0.0520336
+> plot(survivalCoefficients(x), outcomeCoefficients(x))
+> # generate outcome data from the model
+> y <- rand(x, 300)
+> print(table(y$Outcome, y$CancerSubType))
+      
+        1  2  3  4  5  6  7  8  9 10
+  Bad  27 36 27  9  4 28 31 22 19 23
+  Good  1  0  2 15 30  2  0 17  7  0
+> if (require(survival)) {
++   plot(survfit(Surv(LFU, Event) ~ Outcome, y))
++   z <- coxph(Surv(LFU, Event) ~ Outcome, y)
++   summary(z)
++ }
+Loading required package: survival
+Call:
+coxph(formula = Surv(LFU, Event) ~ Outcome, data = y)
+
+  n= 300, number of events= 72 
+
+              coef exp(coef) se(coef)    z Pr(>|z|)   
+OutcomeGood 0.7862    2.1950   0.2419 3.25  0.00115 **
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+            exp(coef) exp(-coef) lower .95 upper .95
+OutcomeGood     2.195     0.4556     1.366     3.526
+
+Concordance= 0.586  (se = 0.028 )
+Rsquare= 0.032   (max possible= 0.93 )
+Likelihood ratio test= 9.76  on 1 df,   p=0.002
+Wald test            = 10.57  on 1 df,   p=0.001
+Score (logrank) test = 11.12  on 1 df,   p=9e-04
+
+> # cleanup
+> rm(x, y, z)
+> 
+> 
+> 
+> 
+> proc.time()
+   user  system elapsed 
+   1.34    0.06    1.45 

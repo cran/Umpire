@@ -1,0 +1,66 @@
+
+R version 3.5.1 (2018-07-02) -- "Feather Spray"
+Copyright (C) 2018 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(Umpire)
+> ###############################################################
+> # We now verify that the MVN methods work, and check the
+> # assertions made for the 'covar' and 'correl' methods. This uses
+> # the "hit" code as well as the "engine" code.
+> 
+> # set the seed to ensure reproducibility
+> RNGversion("3.5.3")
+> set.seed(556401)
+> # set a limit on tolerance
+> tolerance <- 1e-10
+> # create a random orthogonal 2x2 matrix
+> a <- runif(1)
+> b <- sqrt(1-a^2)
+> X <- matrix(c(a, b, -b, a), 2, 2)
+> # now choose random positive squared-eigenvalues
+> Lambda2 <- diag(rev(sort(rexp(2))), 2)
+> # construct a covariance matrix
+> Y <- t(X) %*% Lambda2 %*% X
+> # Use the MVN constructor
+> marvin <- MVN(c(0,0), Y)
+> # check the four assertions
+> print(paste("Tolerance for assertion checking:", tolerance))
+[1] "Tolerance for assertion checking: 1e-10"
+> print(paste("Covar  assertion 1:",
++             all(abs(covar(marvin) - Y) < tolerance)
++             ))
+[1] "Covar  assertion 1: FALSE"
+> mar2 <- alterMean(marvin, normalOffset, delta=3)
+> print(paste("Covar  assertion 2:",
++             all(abs(covar(marvin) - covar(mar2)) < tolerance)
++             ))
+[1] "Covar  assertion 2: TRUE"
+> print(paste("Correl assertion 1:",
++             all(abs(diag(correl(marvin)) - 1) < tolerance)
++             ))
+[1] "Correl assertion 1: TRUE"
+> mar3 <- alterSD(marvin, function(x) 2*x)
+> print(paste("Correl assertion 2:",
++             all(abs(correl(marvin) - correl(mar2)) < tolerance)
++             ))
+[1] "Correl assertion 2: TRUE"
+> rm(a, b, X, Lambda2, Y, marvin, mar2, mar3)
+> 
+> 
+> 
+> proc.time()
+   user  system elapsed 
+   0.28    0.04    0.31 

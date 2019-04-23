@@ -1,5 +1,6 @@
 library(Umpire)
 # set seed to ensure reproducibility
+RNGversion("3.5.3")
 set.seed(823458)
 # create a noise model
 noise <- NoiseModel(0, 1, 0.1)

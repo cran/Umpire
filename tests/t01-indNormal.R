@@ -1,5 +1,6 @@
 library(Umpire)
 # set seed to ensure reproducibility
+RNGversion("3.5.3")
 set.seed(463889)
 # set up the parameters for the test
 nGenes <- 20

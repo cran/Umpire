@@ -1,0 +1,60 @@
+
+R version 3.5.1 (2018-07-02) -- "Feather Spray"
+Copyright (C) 2018 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(Umpire)
+> # set seed to ensure reproducibility
+> RNGversion("3.5.3")
+> set.seed(823458)
+> # create a noise model
+> noise <- NoiseModel(0, 1, 0.1)
+> # set parameters from independent normal hyperparameters
+> nGenes <- 5
+> for (i in 1:2) {
++   mu <- rnorm(nGenes, 6, 1)
++   sigma <- 1/rgamma(nGenes, shape=14, rate=5)
++   temp <- IndependentNormal(mu, sigma)
++   assign(paste('ind', i, sep=''), temp, 1)
++ }
+> # create a correlation matrix
+> a <- runif(1)
+> b <- sqrt(1-a^2)
+> X <- matrix(c(a, b, -b, a), 2, 2)
+> Lambda2 <- diag(rev(sort(rexp(2))), 2)
+> Y <- t(X) %*% Lambda2 %*% X
+> # create  multivariate normal generator
+> marvin <- MVN(c(0,0), Y)
+> # create a  multi-component engine
+> #old: engine <- Engine(ind1, ind2, marvin)
+> engine <- Engine(list(ind1, ind2, marvin))
+> # generate data from the engine
+> x <- rand(engine, 10)
+> # add noise
+> y <- blur(noise, x)
+> print(summary(as.vector(x-y)))
+    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+-2.84937 -0.82289 -0.15102 -0.02792  0.56520  3.74870 
+> # cleanup
+> rm(ind1, ind2, mu, sigma, temp, i, nGenes,
++    a, b, Lambda2, X, Y, marvin, engine,
++    x, y, noise)
+> 
+>   
+> 
+> 
+> proc.time()
+   user  system elapsed 
+   0.26    0.04    0.31 

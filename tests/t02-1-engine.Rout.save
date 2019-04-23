@@ -1,0 +1,72 @@
+
+R version 3.5.1 (2018-07-02) -- "Feather Spray"
+Copyright (C) 2018 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(Umpire)
+> # set seed to ensure reproducibility
+> RNGversion("3.5.3")
+> set.seed(328070)
+> # set the simulation parameters
+> nGenes <- 5
+> # this includes selecting all of the means and standard deviations
+> for (i in 1:4) {
++   mu <- rnorm(nGenes, 6, 1)
++   sigma <- 1/rgamma(nGenes, rate=14, shape=6)
++   temp <- IndependentLogNormal(mu, sigma)
++   assign(paste('ind', i, sep=''), temp, 1)
++ }
+> # now create a simulation engine
+> engine <- Engine(list(ind1, ind2, ind3, ind4))
+> summary(engine)
+An Engine with 4 components.
+> print(nrow(engine))
+[1] 20
+> # generate data from the engine
+> x <- rand(engine, 1000)
+> rho <- cor(t(x))
+> summary(diag(rho))
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      1       1       1       1       1       1 
+> summary(upper.tri(rho))
+     V1              V2              V3              V4         
+ Mode :logical   Mode :logical   Mode :logical   Mode :logical  
+ FALSE:20        FALSE:19        FALSE:18        FALSE:17       
+                 TRUE :1         TRUE :2         TRUE :3        
+     V5              V6              V7              V8         
+ Mode :logical   Mode :logical   Mode :logical   Mode :logical  
+ FALSE:16        FALSE:15        FALSE:14        FALSE:13       
+ TRUE :4         TRUE :5         TRUE :6         TRUE :7        
+     V9             V10             V11             V12         
+ Mode :logical   Mode :logical   Mode :logical   Mode :logical  
+ FALSE:12        FALSE:11        FALSE:10        FALSE:9        
+ TRUE :8         TRUE :9         TRUE :10        TRUE :11       
+    V13             V14             V15             V16         
+ Mode :logical   Mode :logical   Mode :logical   Mode :logical  
+ FALSE:8         FALSE:7         FALSE:6         FALSE:5        
+ TRUE :12        TRUE :13        TRUE :14        TRUE :15       
+    V17             V18             V19             V20         
+ Mode :logical   Mode :logical   Mode :logical   Mode :logical  
+ FALSE:4         FALSE:3         FALSE:2         FALSE:1        
+ TRUE :16        TRUE :17        TRUE :18        TRUE :19       
+> image(rho) # should be nearly diagonal
+> # cleanup
+> rm(ind1, ind2, ind3, ind4, mu, sigma, temp, i, engine, x, nGenes)
+> 
+> 
+> 
+> proc.time()
+   user  system elapsed 
+   0.31    0.04    0.37 
