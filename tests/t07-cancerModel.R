@@ -1,6 +1,6 @@
 library(Umpire)
 # set seed to ensure reproducibility
-RNGversion("3.5.3")
+suppressWarnings( RNGversion("3.5.3") )
 set.seed(539586)
 # create a cancer model
 x <- CancerModel('test', 30, 10,

@@ -1,6 +1,6 @@
 
-R version 3.5.1 (2018-07-02) -- "Feather Spray"
-Copyright (C) 2018 The R Foundation for Statistical Computing
+R version 3.6.0 (2019-04-26) -- "Planting of a Tree"
+Copyright (C) 2019 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -17,7 +17,7 @@ Type 'q()' to quit R.
 
 > library(Umpire)
 > # set seed to ensure reproducibility
-> RNGversion("3.5.3")
+> suppressWarnings( RNGversion("3.5.3") )
 > set.seed(463889)
 > # set up the parameters for the test
 > nGenes <- 20
@@ -75,4 +75,4 @@ In any(sigma - ind@sigma) : coercing argument of type 'double' to logical
 > 
 > proc.time()
    user  system elapsed 
-   0.29    0.04    0.32 
+   0.43    0.23    0.87 

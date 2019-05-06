@@ -5,7 +5,7 @@ library(Umpire)
 # the "hit" code as well as the "engine" code.
 
 # set the seed to ensure reproducibility
-RNGversion("3.5.3")
+suppressWarnings( RNGversion("3.5.3") )
 set.seed(556401)
 # set a limit on tolerance
 tolerance <- 1e-10
