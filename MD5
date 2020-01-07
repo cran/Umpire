@@ -1,4 +1,4 @@
-11bccc1b06aecd510b1c249ef0d93412 *DESCRIPTION
+bb7632a043737cc1468f3ecd1e7aa42e *DESCRIPTION
 e536ddffa64c993b495f85d7a6361f28 *NAMESPACE
 7d28cba40a6657e40882283e0904c9d2 *R/AllGenerics.R
 4044d643052051c394b776c99c2d5934 *R/e00-engine.R
@@ -13,11 +13,11 @@ adb506340b3e3fc4b3371007f7ebac7d *R/e07-2-cancerModel.R
 181e1014fd9aababe73a0bd8535c66c5 *R/e08-cancerEngine.R
 7a6df4084879d87960c01369a9aab5a6 *R/e09-extra.R
 9f48c1e4dae87bfe5fcb564d69de3083 *R/e10-normalVcancer.R
-39b3c55fa1291c105f3bf1048ae2813f *TODO
+bd8d7541c1042f2051959de193264681 *TODO
 d20e0b520a7da54ce7ffbe7f7fe9ddb4 *build/vignette.rds
 f13c3381728bbd513c3380a4f668338b *inst/doc/Umpire.R
 499a492057e4ffdb317046fe5e33ccc5 *inst/doc/Umpire.Rnw
-b9914110f6fb6044b01027131d925dc4 *inst/doc/Umpire.pdf
+3a53d4a31ca40a1291237d8ce4741103 *inst/doc/Umpire.pdf
 31301986ff7ced3f08fb7de4a2d0dcf7 *man/e01-Engine-class.Rd
 f34c316f3609346364e64c6443af4532 *man/e02-EngineWithActivity-class.Rd
 e4b7c0ea02513661d90d2ca6f6fa3025 *man/e03-IndependentNormal-class.Rd
@@ -37,8 +37,8 @@ c940c6f5018b88f58f431c22cf793079 *man/e22-rand-method.Rd
 4961d6544b165c5506e7984e9016b907 *tests/t01-indNormal.Rout.save
 b68fc29f06b2c967a78920bddbda95c4 *tests/t02-1-engine.R
 f9068e2d593cba1ee1f35258c7c52b0c *tests/t02-1-engine.Rout.save
-18c81d736a3fff5ceced72102a867bc6 *tests/t02-indLogNorm.R
-1d38b5b7d29d8c6e4206fd3fad7cbf3e *tests/t02-indLogNorm.Rout.save
+72a19aea710c3452a433c0973b9ea9be *tests/t02-indLogNorm.R
+50fcc333f14830c706a11d6ae74220d1 *tests/t02-indLogNorm.Rout.save
 1d53d55b0bdf36cc23c110c69f88068b *tests/t03-mvn.R
 91c514708850de80f8c9ec46794d6011 *tests/t03-mvn.Rout.save
 02011610e593ffbd5f7081e3cf08842e *tests/t05-noise.R

@@ -1,2 +1,52 @@
+	X finished
+	D drafted
+	O outstanding
+
+FUNCTION LIST FOR UMPIRE 2.0: CLINICAL EXPANSION:
+O estimateClinicalParameters
+	given a certain number of final parameters, estimate hit function, nPossible, block sizes
+	outputs a list of suggested values as inputs for clinicalModel, clinicalNoiseModel, & clinicalHyperParameters
+--->
+D clinicalModel
+	a CancerModel for clinical data
+D clinicalHyperParameters
+	blockHyperParameters with clinical defaults
+D clinicalNoiseModel
+	a NoiseModel with a clinically meaningful distribution
+--->
+O ClinicalEngine
+	takes as inputs the ClinicalModel, clinicalHyperParameters, clinicalNoiseModel
+	and desired % allocation of data types
+	outputs an engine to generate clinical data through the rand function
+---> 
+O rand
+	takes as input a ClinicalEngine
+	outputs a clinical data list
+		1. raw data
+		2. noisy/continuous data
+		3. binned data #1
+		4. list of all input parameters
+		5. clinical model/cluster IDs
+		6. survival model
+
+O addTransformation
+	adds an additional binning structure to a list object with a given ClinicalEngine
+
+ADDITIONAL TO DOs
+O Tests
+O Documentation
+	O estimateClinicalParameters
+	O clinicalModel
+	O clinicalHyperParameters
+	O clinicalNoiseModel
+	O ClinicalEngine
+	O rand (update)
+	O addTransformation
+O Clinical Vignette
+O Paper
+	Why did we choose Umpire and how did we expand it?
+
+####################################################################
+OLD To-Dos:
 Bump for R-Forge
 Added .Rsave.out files for the test suite.
