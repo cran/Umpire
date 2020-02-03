@@ -24,8 +24,6 @@ invGammaMultiple(x, shape, rate)
     parameters specifying the normal distribution}
   \item{shape, rate}{numeric vector used as \code{shape} and/or \code{rate}
     parameters specifying the gamma distribution. Must be positive.}
-  \item{\dots}{additional arguments affecting the specific transformation
-    performed}
 }
 \value{
   \code{normalOffset} returns a new vector, each element of which is added

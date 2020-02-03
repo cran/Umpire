@@ -1,4 +1,4 @@
-bb7632a043737cc1468f3ecd1e7aa42e *DESCRIPTION
+f671c26e2536762cae189bb9a1e9d4a7 *DESCRIPTION
 e536ddffa64c993b495f85d7a6361f28 *NAMESPACE
 7d28cba40a6657e40882283e0904c9d2 *R/AllGenerics.R
 4044d643052051c394b776c99c2d5934 *R/e00-engine.R
@@ -17,13 +17,13 @@ bd8d7541c1042f2051959de193264681 *TODO
 d20e0b520a7da54ce7ffbe7f7fe9ddb4 *build/vignette.rds
 f13c3381728bbd513c3380a4f668338b *inst/doc/Umpire.R
 499a492057e4ffdb317046fe5e33ccc5 *inst/doc/Umpire.Rnw
-3a53d4a31ca40a1291237d8ce4741103 *inst/doc/Umpire.pdf
+c74e5acd0930196386c2c4f1d5f8c933 *inst/doc/Umpire.pdf
 31301986ff7ced3f08fb7de4a2d0dcf7 *man/e01-Engine-class.Rd
 f34c316f3609346364e64c6443af4532 *man/e02-EngineWithActivity-class.Rd
 e4b7c0ea02513661d90d2ca6f6fa3025 *man/e03-IndependentNormal-class.Rd
 85aab0a0901e8827cf4d20d523d161e1 *man/e04-IndependentLogNormal-class.Rd
 8fa082987d982094590a5b476d0e8465 *man/e05-MVN-class.Rd
-ddee87a157e569021a6da0207b2db9e0 *man/e08-transforms.Rd
+a3c11481d64bfbcf4665d0b6f803c326 *man/e08-transforms.Rd
 134397cc6905cf9b55b7ec6ad1bb64be *man/e09-NoiseModel-class.Rd
 7f65d23931106091acfc2d66f225723c *man/e11-SurvivalModel-class.Rd
 40fcf96732c254c8476fdb87c1e248ed *man/e13-CancerModel-class.Rd
