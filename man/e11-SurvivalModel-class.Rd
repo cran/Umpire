@@ -9,19 +9,18 @@
   survival times for each patient.
 }
 \usage{
-SurvivalModel(baseHazard=1/5,
-              accrual=5,
-              followUp=1,
-              units=12,
-              unitName="months")
-\S4method{rand}{SurvivalModel}(object, n, beta=NULL, \dots) 
+SurvivalModel(baseHazard = 1/5,
+              accrual = 5,
+              followUp = 1,
+              units = 12,
+              unitName = "months")
+\S4method{rand}{SurvivalModel}(object, n, beta = NULL, \dots) 
 }
 \arguments{
   \item{baseHazard}{numeric scalar describing the underlying hazard rate at
     baseline levels of covariates}
   \item{accrual}{numeric scalar representing number of patient accrual years}
-  \item{followUp}{numeric scalar representing frequency of follow up in the
-    unit of year}
+  \item{followUp}{numeric scalar representing length of follow up, in years}
   \item{units}{numeric scalar representing number of units per year where
     units are specified by \code{unitName}}
   \item{unitName}{character string representing the \code{unit} argument type}
@@ -78,8 +77,8 @@ sm <- SurvivalModel()
 outcome <- rand(sm, 100)
 summary(outcome)
 ## Generate data from five classes with different beta parameters
-beta <- rep(rnorm(5, 0, 2), each=20)
-outcome <- rand(sm, 100, beta=beta)
+beta <- rep(rnorm(5, 0, 2), each = 20)
+outcome <- rand(sm, 100, beta = beta)
 summary(outcome)
 }
 \keyword{classes}

@@ -51,7 +51,7 @@ setMethod("nrow", "Engine", function(x) {
 # may be implicitly taken to be the position of the component
 # in the ordered list.
 
-nComponents <- function(object) {
+setMethod("nComponents", "Engine", function(object, ...) {
   length(object@components)
-}
+})
 

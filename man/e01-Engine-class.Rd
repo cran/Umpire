@@ -6,7 +6,7 @@
 \alias{nrow,Engine-method}
 \alias{rand,Engine-method}
 \alias{summary,Engine-method}
-\alias{nComponents}
+\alias{nComponents,Engine-method}
 \docType{class}
 \title{The "Engine" Class}
 \description{
@@ -15,7 +15,7 @@
 }
 \usage{
 Engine(components)
-nComponents(object)
+\S4method{nComponents}{Engine}(object, \dots)
 \S4method{alterMean}{Engine}(object, TRANSFORM, \dots)
 \S4method{alterSD}{Engine}(object, TRANSFORM, \dots)
 \S4method{nrow}{Engine}(x)

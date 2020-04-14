@@ -32,6 +32,22 @@ setValidity("NoiseModel", function(object) {
   msg
 })
 
+setMethod("summary", "NoiseModel", function(object, ...) {
+  showme <- function(slot, name) {
+    cat("\t", name)
+    if (length(slot) == 1) {
+      cat(" = ", slot, "\n", sep="")
+    } else {
+      cat(" distributed as:\n")
+      print(summary(slot))
+    }
+  }
+  cat("A 'NoiseModel' with:\n")
+  showme(object@additiveOffset, "additive offset")
+  showme(object@additiveScale, "additive scale")
+  showme(object@multiplicativeScale, "multiplicative scale")
+})
+
 NoiseModel <- function(nu, tau, phi) {
   ## :TODO: sadly, no parameter checking was done...
   # KRC: Tough. Leave it alone.

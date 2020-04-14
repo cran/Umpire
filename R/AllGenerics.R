@@ -25,6 +25,10 @@ if (!isGeneric("ncol"))
   setGeneric("ncol",
      function(x) standardGeneric("ncol"))
 
+if (!isGeneric("nComponents"))
+  setGeneric("nComponents",
+     function(object, ...) standardGeneric("nComponents"))
+
 if (!isGeneric("blur"))
   setGeneric("blur",
      function(object, x, ...) standardGeneric("blur"))

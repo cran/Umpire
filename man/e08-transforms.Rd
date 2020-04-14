@@ -26,8 +26,8 @@ invGammaMultiple(x, shape, rate)
     parameters specifying the gamma distribution. Must be positive.}
 }
 \value{
-  \code{normalOffset} returns a new vector, each element of which is added
-  by a offset chosen from a normal distribution with parameters \code{mean}
+  \code{normalOffset} returns a new vector, TO each element of which is added
+  aN offset chosen from a normal distribution with parameters \code{mean}
   and \code{sd}.
 
   \code{invGammaMultiple} returns a new vector, each element of which is

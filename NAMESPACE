@@ -6,10 +6,8 @@
 ## Imported methods
 import(methods)
 import(stats)
-##importFrom(base, summary)
-##importFrom(base, nrow)
-##importFrom(base, ncol)
-##importFrom(base, as.data.frame)
+importFrom(BimodalIndex, bimodalIndex)
+importFrom(mc2d, rdirichlet)
 
 ## Public classes
 exportClasses(BlockHyperParameters)
@@ -29,6 +27,7 @@ exportMethods(nrow)
 exportMethods(summary)
 
 ## S4 methods for new generic functions
+exportMethods(nComponents)
 exportMethods(alterMean)
 exportMethods(alterSD)
 exportMethods(blur)
@@ -63,3 +62,6 @@ export(makeBlockStructure)
 export(NormalVsCancerModel)
 export(NormalVsCancerEngine)
 
+## clinical stuff
+exportClasses(MixedTypeEngine)
+export("setDataTypes", "ClinicalNoiseModel", "ClinicalEngine", "MixedTypeEngine")

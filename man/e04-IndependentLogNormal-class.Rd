@@ -1,6 +1,8 @@
 \name{IndependentLogNormal-class}
 \alias{IndependentLogNormal-class}
 \alias{IndependentLogNormal}
+\alias{alterMean,IndependentLogNormal-method}
+\alias{alterSD,IndependentLogNormal-method}
 \alias{nrow,IndependentLogNormal-method}
 \alias{rand,IndependentLogNormal-method}
 \alias{summary,IndependentLogNormal-method}
@@ -13,6 +15,8 @@
 }
 \usage{
 IndependentLogNormal(logmu,logsigma)
+\S4method{alterMean}{IndependentLogNormal}(object, TRANSFORM, \dots)
+\S4method{alterSD}{IndependentLogNormal}(object, TRANSFORM, \dots)
 \S4method{nrow}{IndependentLogNormal}(x)
 \S4method{rand}{IndependentLogNormal}(object, n, \dots)
 \S4method{summary}{IndependentLogNormal}(object, \dots)
@@ -23,6 +27,9 @@ IndependentLogNormal(logmu,logsigma)
   \item{logsigma}{numeric vector specifying the standard deviation of the
     gene expression values on the logarithmic scale}
   \item{object, x}{object of class \code{IndependentLogNormal}}
+  \item{TRANSFORM}{function that takes a vector of mean expression or
+    standard deviation and returns a transformed vector that can be used
+    to alter the appropriate slot of the object.}
   \item{n}{numeric scalar specifying number of samples to be simulated}
   \item{\dots}{extra arguments for generic or plotting routines}
 }

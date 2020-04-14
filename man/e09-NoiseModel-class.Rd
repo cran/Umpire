@@ -2,6 +2,7 @@
 \alias{NoiseModel-class}
 \alias{NoiseModel}
 \alias{blur,NoiseModel-method}
+\alias{summary,NoiseModel-method}
 \docType{class}
 \title{The "NoiseModel" Class}
 \description{
@@ -12,21 +13,22 @@
 \usage{
 NoiseModel(nu, tau, phi)
 \S4method{blur}{NoiseModel}(object, x, \dots)
+\S4method{summary}{NoiseModel}(object, \dots)
 }
 \arguments{
   \item{nu}{The mean value for the additive noise}
   \item{tau}{The standard deviation for the additive noise}
-  \item{phi}{The standard deviation for the multiplicative noise. Note
-    the mean of multiplicative noise is set to \code{0}.}
+  \item{phi}{The standard deviation for the multiplicative noise. Note that
+    the mean of the multiplicative noise is set to \code{0}.}
   \item{object}{object of class \code{NoiseModel}}
   \item{x}{The data matrix containing true signal from the gene expression}
-  \item{\dots}{extra arguments affecting blur applied}
+  \item{\dots}{extra arguments affecting the blur method applied}
 }
 \details{
   We model both additive and multiplicative noise, so that the observed
   expression of gene \var{g} in sample \var{i} is given by:
   \eqn{Y_gi = S_gi exp(H_gi) + E_gi}, where \var{Y_gi} = observed expression,
-  \var{S_gi} = true bilogical signal,
+  \var{S_gi} = true biological signal,
   H_gi ~ N(0, phi) defines the multiplicative noise, and
   E_gi ~ N(nu,tau) defines the additive noise.
   Note that we allow a systematic offset/bias in the additive noise model.
@@ -35,6 +37,9 @@ NoiseModel(nu, tau, phi)
   \describe{
     \item{blur(object, x, \dots)}{Adds and multiplies random noise to the
       data matrix \code{x} containing the true signal from the gene expression.}
+  }
+  \describe{
+    \item{summary(object, \dots)}{Prints a summary of the object.}
   }
 }
 \references{

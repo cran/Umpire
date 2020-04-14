@@ -61,7 +61,17 @@ setMethod("summary", "CancerEngine", function(object, ...) {
   cat("--------------\n\nBase expression given by:\n")
   summary(get(object@base, object@localenv))
   cat("\nAltered expression given by:\n")
-  summary(get(object@altered, object@localenv))  
+  summary(get(object@altered, object@localenv))
+})
+
+# Every engine must know the number of genes (i.e, the length of the vector)
+# it generates.
+setMethod("nrow", "CancerEngine", function(x) {
+  nrow(x@localenv$eng)
+})
+
+setMethod("nComponents", "CancerEngine", function(object, ...) {
+  nComponents(object@localenv$eng)
 })
 
 setMethod("rand", "CancerEngine", function(object, n, ...) {

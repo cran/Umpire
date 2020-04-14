@@ -5,8 +5,8 @@
 \docType{methods}
 \title{Method "rand"}
 \description{
-  \code{rand} is a generic function used to produce random numbers from the
-  distribution defined by various objects. The method invokes particular
+  \code{rand} is a generic function used to produce random vectors from the
+  distribution defined by various objects. The generic function invokes particular
   \code{\link{methods}} which depend on the \code{\link{class}} of the first
   argument.
 }

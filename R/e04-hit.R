@@ -59,6 +59,22 @@ setMethod("alterSD", "IndependentNormal", function(object, TRANSFORM, ...) {
 })
 
 ####################
+## Replace the appropriate slot by the transformed vector
+setMethod("alterMean", "IndependentLogNormal", function(object, TRANSFORM, ...) {
+  new("IndependentLogNormal",
+      logmu = TRANSFORM(object@logmu), # maybe add option for working on normal scale
+      logsigma = object@logsigma)
+})
+
+## Replace the appropriate slot by the transformed vector
+setMethod("alterSD", "IndependentLogNormal", function(object, TRANSFORM, ...) {
+  new("IndependentLogNormal",
+      logmu = object@logmu,
+      logsigma = TRANSFORM(object@logsigma, ...)) # option for normal scale?
+})
+
+
+####################
 # alterMean for an 'MVN' simply replaces the appropriate slot by
 # the transformed vector
 setMethod("alterMean", "MVN", function(object, TRANSFORM, ...) {

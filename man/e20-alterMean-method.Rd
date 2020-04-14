@@ -9,8 +9,8 @@
 \title{Methods "alterMean" and "alterSD"}
 \description{
   \code{alterMean} and \code{alterSD} are generic functions used to alter
-  means or standard deviations respectively based on the input object.
-  probability based on the input object. Each method invokes particular
+  means or standard deviations, respectively, based on the input object.
+  Each generic functions invokes different
   \code{\link{methods}} which depend on the \code{\link{class}} of the
   first argument.
 }

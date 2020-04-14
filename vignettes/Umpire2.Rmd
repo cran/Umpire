@@ -1,0 +1,224 @@
+---
+title: "Umpire 2.0: Clinically Realistic Simulations"
+author: "Kevin R. Coombes and Caitlin E. Coombes"
+data: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Umpire 2.0}
+  %\VignetteKeywords{Umpire, simulations, mixed type data, clinical data}
+  %\VignetteDepends{Umpire}
+  %\VignettePackage{Umpire}
+  %\VignetteEngine{knitr::rmarkdown}
+---
+
+# Introduction
+
+Version 2.0 of the Ultimate Microarray Prediction, Inference, and 
+Reality Engine (Umpire) extends the functions of the Umpire 1.0 R 
+package to allow researchers to simulate realistic, mixed-type, 
+clinical data. Statisticians, computer scientists, and clinical 
+informaticians who develop and improve methods to analyze clinical data 
+from a variety of contexts (including clinical trials, population 
+cohorts, and electronic medical record sources) recognize that it is 
+difficult to evaluate methods on real data where "ground truth" is unknown. 
+Frequently, they turn to simulations where the can control the 
+underlying structure, which can result in simulations which are too 
+simplistic to reflect complex clinical data realities. Clinical 
+measurements on patients may be treated as independent, in spite of 
+the elaborate correlation structures that arise in networks, pathways, 
+organ systems, and syndromes in real biology. Further, the researcher 
+finds limited tools at her disposal to facilitate simulation of binary, 
+categorical, or mixed data at this representative level of biological 
+complexity.
+
+
+In this vignette, we describe a workflow with the <tt>Umpire</tt> package 
+to simulate biologically realistic, mixed-type clinical data.
+
+As usual, we start by loading the package:
+
+```{r}
+library(Umpire)
+```
+
+# Simulating Mixed-Type Clinical Data
+Since we are going to run simulations, for reproducibility purposes, we should
+set the seed of the random number generator.
+```{r seed}
+set.seed(84503)
+```
+
+## Model Subtypes and Survival
+The simulation workflow begins by simulating complex, correlated, 
+continuous data with known "ground truth" by instantiating a 
+<tt>ClinicalEngine</tt>. We simulate 20 features and 4 clusters of 
+unequal size. The ClinicalEngine generates subtypes (clusters) with 
+known "ground truth" through an implementation of the Umpire 1.0 
+<tt>CancerModel</tt> and <tt>CancerEngine</tt>.
+```{r}
+ce <- ClinicalEngine(20, 4, isWeighted = TRUE)
+summary(ce)
+```
+Note that the prevalences are not equal; when you use <tt>isweighted = TRUE</tt>,
+they are chosen from a Dirichlet distribution.
+Note also that the <tt>summary</tt> function describes the object as a 
+<tt>CancerEngine</tt>, since the same underlying structure is used to
+implement a <tt>ClinicalEngine</tt>.
+
+Now we confirm that the model expects to produce the 20 features that we
+requested. It will do so using 10 "components", where each component consists
+of a pair of correlated features.
+```{r nrow}
+nrow(ce)
+nComponents(ce)
+```
+
+## Simulate Raw Data
+The <tt>ClinicalEngine</tt> is used to simulate the raw, base dataset.
+```{r}
+dset <- rand(ce, 300)
+```
+
+Data are simulated as a list with two objects: simulated 
+<tt>data</tt> and associated <tt>clinical</tt> information, including 
+"ground truth" subtype membership and survival data (outcome, length of 
+followup, and occurrence of event of interest within the followup period).
+```{r}
+class(dset)
+names(dset)
+summary(dset$clinical)
+```
+
+The raw <tt>data</tt> are simulated as a matrix of continuous values.
+```{r}
+class(dset$data)
+dim(dset$data)
+```
+
+## Apply Clinically Realistic Noise
+The user may add further additive noise to the raw data. The 
+<tt>ClinicalNoiseModel</tt> simulates additive noise for each 
+feature _f_ and patient _i_ as a normal distribution 
+$E_{fi} \sim N(0, \tau)$ , where the standard deviation $\tau$ 
+varies with a hyperparameter along the gamma distribution 
+$\tau \sim Gamma(shape, scale)$. Thus, the ClinicalNoiseModel 
+generates many features with low noise (such as a tightly calibrated 
+laboratory test) and some features with high noise (such as 
+a blood pressure measured by hand and manually entered into the 
+medical record.) The user may apply default parameters or individual 
+parameters. Next, the <tt>ClinicalNoiseModel</tt> is applied to 
+<tt>blur</tt> the previously simulated data. The default model 
+below generates a low overall level of additive noise.
+
+```{r}
+cnm <- ClinicalNoiseModel(nrow(ce@localenv$eng), shape = 1.02, scale = 0.05)
+summary(cnm)
+noisy <- blur(cnm, dset$data)
+```
+
+## Simulate Mixed-Type Data
+<tt>Umpire 2.0</tt> allows the simulation of binary, nominal, 
+and ordinal data from raw, continuous data in variable, user-defined 
+mixtures. The user defines prevalences, summing to 1, of binary, 
+continuous, and categorical data in the desired final mixture.
+For categorical features, the user may tune the percent of categorical 
+data desired to be nominal and the range of the number of categories to be 
+simulated. 
+
+The data simulated above by the <tt>ClinicalEngine</tt> and 
+<tt>ClinicalNoiseModel</tt> takes rows (not columns) as features, as 
+an omics convention. Thus, by default, when generating data,
+rows are treated as features and columns as patients. The <tt>setDataTypes</tt>
+method transposes its results to a data frame where the columns are features
+and the rows are patients. This transposition both fits better with the
+conventions used for clinical data, but also supports the ability to store
+different kinds of (mixed-type) data in different columns.
+
+```{r}
+dt <- setDataTypes(dset$data,
+                   pCont = 1/3, pBin = 1/3, pCat = 1/3,
+                   pNominal = 0.5, range = 3:9,
+                   inputRowsAreFeatures = TRUE)
+names(dt)
+```
+
+The <tt>setDataTypes</tt> function generates a list containing two objects:
+a data.frame of mixed-type data...
+```{r}
+class(dt$binned)
+dim(dt$binned)
+summary(dt$binned)
+```
+
+The <tt>cutpoints</tt> contain a record, for each feature, of data 
+type, break points, and labels.  Here are two examples of the kind of
+information stored for a cutpoint.
+```{r}
+dt$cutpoints[[1]]
+dt$cutpoints[[5]]
+```
+And here is an overview of the number of features of each type.
+```{r}
+cp <- dt$cutpoints
+type <- sapply(cp, function(X) { X$Type })
+table(type)
+```
+
+The <tt>cupoitns</tt> should be saved for downstream use in 
+the <tt>MixedTypeEngine</tt>.
+
+
+## The MixedTypeEngine
+The many parameters defining a simulated data mixture can be stored as 
+a single <tt>MixedTypeEngine</tt> for downstream use to easily generate 
+future datasets with the same simulation parameters.
+
+The <tt>MixedTypeEngine</tt> stores the following components for re-implementation:
+
+1. The <tt>ClinicalEngine</tt>, including parameters for generating the subtype pattern and survival model.
+2. The <tt>ClinicalNoiseModel</tt>.
+3. The <tt>cutpoints</tt> generated by <tt>setDataTypes</tt>.
+
+```{r}
+mte <- MixedTypeEngine(ce,
+                       noise = cnm,
+                       cutpoints = dt$cutpoints)
+summary(mte)
+```
+
+With <tt>rand</tt>, the user can easily generate new data sets with 
+the same simulation parameters.
+```{r}
+dset2 <- rand(mte, 20)
+class(dset2)
+summary(dset2)
+```
+
+By using the <tt>keepal</tt> argument othe function, you can keep the
+intermediate datasets produced by the <tt>rand</tt> method.
+```{r}
+dset3 <- rand(mte, 25, keepall = TRUE)
+class(dset3)
+names(dset3)
+```
+The <tt>raw</tt> and <tt>noisy</tt> elements have the rows as (future clinical)
+features and the columns as patients/samples.
+```{r raw}
+dim(dset3$raw)
+summary(t(dset3$raw))
+dim(t(dset3$noisy))
+summary(dset3$noisy)
+```
+Noisy data arises by adding simulated noise to the raw data.
+```{r, fig.cap="Raw and noisy data."}
+plot(dset3$raw[5,], dset3$noisy[5,], xlab = "Raw", ylab = "Noisy", pch=16)
+```
+
+The <tt>binned>,/tt< elemnt has columns as features and rows as samoples.
+Binned data arises by applying cut points to noisy data.
+```{r fig.cap = "Noisy and binned data."}
+dim(dset3$binned)
+summary(dset3$binned)
+plot(dset3$binned[,5], dset3$noisy[5,], xlab = "Binned", ylab = "Noisy")
+```
+

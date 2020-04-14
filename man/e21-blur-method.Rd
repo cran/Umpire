@@ -6,7 +6,7 @@
 \title{Method "blur"}
 \description{
   \code{blur} is a generic function used to add noise to a signal as defined
-  by various objects. The method invokes particular \code{\link{methods}}
+  by various objects. The generic function invokes different \code{\link{methods}}
   which depend on the \code{\link{class}} of the first argument.
 }
 \usage{

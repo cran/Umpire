@@ -47,12 +47,12 @@ correl(object)
   pieces are stored in the object. The \code{rand} method for \code{MVN}
   objects contains the second half of the \code{mvrnorm} function.
 
-  Note that we typically work on expression value with its logarithm to
-  some appropriate base. That is, the multivariate normal should
-  be used on the logarithmic scale in order to contruct engine.
+  Note that we typically work on expression values after taking the
+  logarithm to some appropriate base. That is, the multivariate normal
+  should be used on the logarithmic scale in order to contruct an engine.
 
-  \code{alterMean} for an \code{MVN} simply replaces the appropriate slot by
-  the transformed vector. \code{alterSD} for an \code{MVN} is trickier,
+  The \code{alterMean} method for an \code{MVN} simply replaces the appropriate slot by
+  the transformed vector. The \code{alterSD} method for an \code{MVN} is trickier,
   because of the way the data is stored. In order to have some hope of getting
   this correct, we work in the space of the covariance matrix, \var{Sigma}.
   If we let \var{R} denote the correlation matrix and let \var{Delta} be the
@@ -62,16 +62,16 @@ correl(object)
   product. We then construct a new \code{MVN} object with the old mean vector
   and the new covariance matrix.
 
-  \code{covar} and \code{correl} functions calculate the covariance matrix
-  and correlation matrix underlies the covariance matrix for the objects of
-  class \code{MVN}, respectively. We have four assertions as shown below,
-  and will be tested in the examples section:
+  The \code{covar} and \code{correl} functions, respectively, calculate
+  the covariance matrix and correlation matrix that underly the
+  covariance matrix for the objects of class \code{MVN}. We have four
+  assertions as shown below, which are tested in the examples section:
   \enumerate{
     \item \code{covar} should return the same matrix that was used
       in the function call to construct the \code{MVN} object.
     \item After applying an \code{alterMean} method, the
       covariance matrix is unchanged.
-    \item The diagonal of correlation matrix consists of all ones.
+    \item The diagonal of the correlation matrix consists of all ones.
     \item After applying an \code{alterMean} or an \code{alterSD} method, the
       correlation matrix is unchanged.
   }
@@ -83,9 +83,9 @@ correl(object)
 }
 \section{Slots}{
   \describe{
-    \item{\code{mu}:}{numeric vector containing the k-dimentional means}
+    \item{\code{mu}:}{numeric vector containing the k-dimensional means}
     \item{\code{lambda}:}{numeric vector containing the square roots of
-      eigenvalues of the covariance matrix}
+      the eigenvalues of the covariance matrix}
     \item{\code{half}:}{numeric matrix with \eqn{k*k} dimensions whose
       columns contain the eigenvectors of the covariance matrix}
   }

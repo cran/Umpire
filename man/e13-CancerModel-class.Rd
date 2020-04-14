@@ -33,7 +33,7 @@ outcomeCoefficients(object)
 survivalCoefficients(object)
 \S4method{ncol}{CancerModel}(x)
 \S4method{nrow}{CancerModel}(x)
-\S4method{rand}{CancerModel}(object, n, balance=FALSE, \dots)
+\S4method{rand}{CancerModel}(object, n, balance = FALSE, \dots)
 \S4method{summary}{CancerModel}(object, \dots)
 }
 \arguments{
@@ -100,10 +100,10 @@ survivalCoefficients(object)
   describes whether the simulated survival event has occurred.
 
   The \code{rand} method for the \code{CancerModel} class adds an extra
-  logical parameter, \code{balanced}, to the signature specified by the
-  default method.  If \code{balanced=FALSE} (the default), then
-  patients are simulated based on the \code{prevalence} defined as apart
-  of the model.   If \code{balanced=TRUE}, then patients are simulated
+  logical parameter, \code{balance}, to the signature specified by the
+  default method.  If \code{balance = FALSE} (the default), then
+  patients are simulated based on the \code{prevalence} defined as part
+  of the model.   If \code{balance = TRUE}, then patients are simulated
   with equal numbers in each hit pattern class, ordered by the hit
   pattern class.
 }

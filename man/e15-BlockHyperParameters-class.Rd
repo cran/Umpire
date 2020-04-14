@@ -10,17 +10,17 @@
   with this block structure.
 }
 \usage{
-BlockHyperParameters(nExtraBlocks=100,
-                     meanBlockSize=100,
-                     sigmaBlockSize=30,
-                     minBlockSize=5,
-                     mu0=6,
-                     sigma0=1.5,
-                     rate=28.11,
-                     shape=44.25,
-                     p.cor=0.6,
-                     wt.cor=5)
-makeBlockStructure(cm, hyperp, xform=normalOffset, ...)
+BlockHyperParameters(nExtraBlocks = 100,
+                     meanBlockSize = 100,
+                     sigmaBlockSize = 30,
+                     minBlockSize = 5,
+                     mu0 = 6,
+                     sigma0 = 1.5,
+                     rate = 28.11,
+                     shape = 44.25,
+                     p.cor = 0.6,
+                     wt.cor = 5)
+makeBlockStructure(cm, hyperp, xform = normalOffset, ...)
 }
 \arguments{
   \item{cm}{object of class \code{CancerModel}}
@@ -28,7 +28,7 @@ makeBlockStructure(cm, hyperp, xform=normalOffset, ...)
   \item{nExtraBlocks}{integer scalar specifying number of blocks not
     involved in the "hit" structure defined by the \code{CancerModel}}
   \item{meanBlockSize}{numeric scalar specifying mean number of genes in a
-    correlated block} 
+    correlated block}
   \item{sigmaBlockSize}{numeric scalar specifying standard deviation of the
     number of genes in a correlated block}
   \item{minBlockSize}{integer scalar specifying minimal number of genes in a
@@ -131,9 +131,9 @@ makeBlockStructure(cm, hyperp, xform=normalOffset, ...)
 }
 \examples{
 showClass("BlockHyperParameters")
-sm <- SurvivalModel(baseHazard=1/3, units=52, unitName="weeks")
-cm <- CancerModel("myModel", nPossible=10, nPattern=5,
-                  survivalModel=sm)
+sm <- SurvivalModel(baseHazard = 1/3, units = 52, unitName = "weeks")
+cm <- CancerModel("myModel", nPossible = 10, nPattern = 5,
+                  survivalModel = sm)
 hyper <- BlockHyperParameters()
 engine <- makeBlockStructure(cm, hyper)
 outcome <- rand(engine, 100)
