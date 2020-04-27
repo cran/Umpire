@@ -9,7 +9,7 @@ generated from an engine of any type into binary, nominal, ordinal, or mixed-typ
 }
 \usage{
 setDataTypes(dataset, pCont, pBin, pCat, pNominal = 0.5,
-             range = c(3, 9), inputRowsAreFeatures = TRUE)
+             range = c(3, 9), exact = FALSE, inputRowsAreFeatures = TRUE)
 }
 \arguments{
   \item{dataset}{A matrix or dataframe of continuous data.}
@@ -34,6 +34,11 @@ setDataTypes(dataset, pCont, pBin, pCat, pNominal = 0.5,
     A set of integers whose minimum and maximum determine the range of
     the number of levels to be associated with simulated  categorical
     factors.
+}
+  \item{exact}{
+    A logical value; should the parameters \code{pCont}, \code{pBin}
+    and \code{pCat} be treated  as exact fractions to achieve or as
+    probabilities.
 }
   \item{inputRowsAreFeatures}{
     Logical value indicating if features are to be simulated as rows 

@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 
 <meta name="author" content="Kevin R. Coombes and Caitlin E. Coombes" />
 
@@ -119,9 +118,6 @@ padding-right: 2em;
 font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 font-size: 14px;
 line-height: 1.35;
-}
-#header {
-text-align: center;
 }
 #TOC {
 clear: both;
@@ -290,7 +286,8 @@ code > span.st { color: #d14; }
 code > span.co { color: #888888; font-style: italic; } 
 code > span.ot { color: #007020; } 
 code > span.al { color: #ff0000; font-weight: bold; } 
-code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
 </style>
 
 
@@ -327,7 +324,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <pre><code>## A &#39;CancerEngine&#39; using the cancer model:
 ## --------------
 ## Clinical Simulation Model (Raw) , a CancerModel object constructed via the function call:
-##  CancerModel(name = &quot;Clinical Simulation Model (Raw)&quot;, nPossible = NP, nPattern = nClusters, HIT = hitfn, prevalence = Prevalence(isWeighted, nClusters)) 
+##  CancerModel(name = &quot;Clinical Simulation Model (Raw)&quot;, nPossible = NP, nPattern = nClusters, HIT = hitfn, survivalModel = survivalModel, prevalence = Prevalence(isWeighted, nClusters)) 
 ## 
 ## Pattern prevalences:
 ## [1] 0.3173905 0.1315154 0.1265533 0.4245408
@@ -372,7 +369,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 ##  Max.   :4.00              Max.   :71.00</code></pre>
 <p>The raw <tt>data</tt> are simulated as a matrix of continuous values.</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="kw">class</span>(dset<span class="op">$</span>data)</span></code></pre></div>
-<pre><code>## [1] &quot;matrix&quot;</code></pre>
+<pre><code>## [1] &quot;matrix&quot; &quot;array&quot;</code></pre>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="kw">dim</span>(dset<span class="op">$</span>data)</span></code></pre></div>
 <pre><code>## [1]  20 300</code></pre>
 </div>
@@ -396,50 +393,49 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a>dt &lt;-<span class="st"> </span><span class="kw">setDataTypes</span>(dset<span class="op">$</span>data,</span>
 <span id="cb23-2"><a href="#cb23-2"></a>                   <span class="dt">pCont =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">3</span>, <span class="dt">pBin =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">3</span>, <span class="dt">pCat =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">3</span>,</span>
 <span id="cb23-3"><a href="#cb23-3"></a>                   <span class="dt">pNominal =</span> <span class="fl">0.5</span>, <span class="dt">range =</span> <span class="dv">3</span><span class="op">:</span><span class="dv">9</span>,</span>
-<span id="cb23-4"><a href="#cb23-4"></a>                   <span class="dt">inputRowsAreFeatures =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
-<pre><code>## 1</code></pre>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a><span class="kw">names</span>(dt)</span></code></pre></div>
+<span id="cb23-4"><a href="#cb23-4"></a>                   <span class="dt">inputRowsAreFeatures =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb23-5"><a href="#cb23-5"></a><span class="kw">names</span>(dt)</span></code></pre></div>
 <pre><code>## [1] &quot;binned&quot;    &quot;cutpoints&quot;</code></pre>
 <p>The <tt>setDataTypes</tt> function generates a list containing two objects: a data.frame of mixed-type data…</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="kw">class</span>(dt<span class="op">$</span>binned)</span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a><span class="kw">class</span>(dt<span class="op">$</span>binned)</span></code></pre></div>
 <pre><code>## [1] &quot;data.frame&quot;</code></pre>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a><span class="kw">dim</span>(dt<span class="op">$</span>binned)</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="kw">dim</span>(dt<span class="op">$</span>binned)</span></code></pre></div>
 <pre><code>## [1] 300  20</code></pre>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a><span class="kw">summary</span>(dt<span class="op">$</span>binned)</span></code></pre></div>
-<pre><code>##        V1             V2            V3               V4         V5    
-##  Min.   :0.00   Min.   :0.0   Min.   :0.5845   Min.   :0.0000   R:70  
-##  1st Qu.:0.00   1st Qu.:0.0   1st Qu.:2.1179   1st Qu.:0.0000   S:56  
-##  Median :1.00   Median :1.0   Median :2.8589   Median :0.0000   T:50  
-##  Mean   :0.69   Mean   :0.7   Mean   :2.8963   Mean   :0.4033   U:54  
-##  3rd Qu.:1.00   3rd Qu.:1.0   3rd Qu.:3.7239   3rd Qu.:1.0000   V:70  
-##  Max.   :1.00   Max.   :1.0   Max.   :5.0888   Max.   :1.0000         
-##                                                                       
-##  V6           V7        V8           V9            V10          V11       
-##  R:42   Min.   :4.974   R:83   Min.   :0.00   V      :44   Min.   :3.370  
-##  S:43   1st Qu.:6.378   S:53   1st Qu.:0.00   T      :41   1st Qu.:5.035  
-##  T:34   Median :7.032   T:79   Median :0.00   W      :35   Median :5.565  
-##  U:44   Mean   :6.983   U:85   Mean   :0.34   X      :35   Mean   :5.564  
-##  V:51   3rd Qu.:7.547          3rd Qu.:1.00   S      :34   3rd Qu.:6.177  
-##  W:46   Max.   :9.120          Max.   :1.00   U      :32   Max.   :7.137  
-##  X:40                                         (Other):79                  
-##       V12            V13            V14            V15       
-##  Min.   :0.00   Min.   :0.00   Min.   :0.00   Min.   :5.191  
-##  1st Qu.:0.00   1st Qu.:1.00   1st Qu.:1.00   1st Qu.:6.600  
-##  Median :0.00   Median :1.00   Median :1.00   Median :6.950  
-##  Mean   :0.17   Mean   :0.79   Mean   :0.92   Mean   :6.960  
-##  3rd Qu.:0.00   3rd Qu.:1.00   3rd Qu.:1.00   3rd Qu.:7.275  
-##  Max.   :1.00   Max.   :1.00   Max.   :1.00   Max.   :8.468  
-##                                                              
-##       V16             V17              V18            V19     V20    
-##  Min.   :6.086   Min.   : 7.631   Min.   :0.00   E      :55   R: 61  
-##  1st Qu.:7.622   1st Qu.: 8.767   1st Qu.:0.00   C      :43   S:105  
-##  Median :8.013   Median : 9.146   Median :0.00   H      :43   T: 83  
-##  Mean   :8.042   Mean   : 9.123   Mean   :0.25   B      :36   U: 51  
-##  3rd Qu.:8.486   3rd Qu.: 9.491   3rd Qu.:0.25   G      :33          
-##  Max.   :9.660   Max.   :10.488   Max.   :1.00   F      :32          
-##                                                  (Other):58</code></pre>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a><span class="kw">summary</span>(dt<span class="op">$</span>binned)</span></code></pre></div>
+<pre><code>##        V1             V2            V3               V4         V5     V6    
+##  Min.   :0.00   Min.   :0.0   Min.   :0.5845   Min.   :0.0000   R:70   R:42  
+##  1st Qu.:0.00   1st Qu.:0.0   1st Qu.:2.1179   1st Qu.:0.0000   S:56   S:43  
+##  Median :1.00   Median :1.0   Median :2.8589   Median :0.0000   T:50   T:34  
+##  Mean   :0.69   Mean   :0.7   Mean   :2.8963   Mean   :0.4033   U:54   U:44  
+##  3rd Qu.:1.00   3rd Qu.:1.0   3rd Qu.:3.7239   3rd Qu.:1.0000   V:70   V:51  
+##  Max.   :1.00   Max.   :1.0   Max.   :5.0888   Max.   :1.0000          W:46  
+##                                                                        X:40  
+##        V7        V8           V9            V10          V11       
+##  Min.   :4.974   R:83   Min.   :0.00   V      :44   Min.   :3.370  
+##  1st Qu.:6.378   S:53   1st Qu.:0.00   T      :41   1st Qu.:5.035  
+##  Median :7.032   T:79   Median :0.00   W      :35   Median :5.565  
+##  Mean   :6.983   U:85   Mean   :0.34   X      :35   Mean   :5.564  
+##  3rd Qu.:7.547          3rd Qu.:1.00   S      :34   3rd Qu.:6.177  
+##  Max.   :9.120          Max.   :1.00   U      :32   Max.   :7.137  
+##                                        (Other):79                  
+##       V12            V13            V14            V15             V16       
+##  Min.   :0.00   Min.   :0.00   Min.   :0.00   Min.   :5.191   Min.   :6.086  
+##  1st Qu.:0.00   1st Qu.:1.00   1st Qu.:1.00   1st Qu.:6.600   1st Qu.:7.622  
+##  Median :0.00   Median :1.00   Median :1.00   Median :6.950   Median :8.013  
+##  Mean   :0.17   Mean   :0.79   Mean   :0.92   Mean   :6.960   Mean   :8.042  
+##  3rd Qu.:0.00   3rd Qu.:1.00   3rd Qu.:1.00   3rd Qu.:7.275   3rd Qu.:8.486  
+##  Max.   :1.00   Max.   :1.00   Max.   :1.00   Max.   :8.468   Max.   :9.660  
+##                                                                              
+##       V17              V18            V19     V20    
+##  Min.   : 7.631   Min.   :0.00   E      :55   R: 61  
+##  1st Qu.: 8.767   1st Qu.:0.00   C      :43   S:105  
+##  Median : 9.146   Median :0.00   H      :43   T: 83  
+##  Mean   : 9.123   Mean   :0.25   B      :36   U: 51  
+##  3rd Qu.: 9.491   3rd Qu.:0.25   G      :33          
+##  Max.   :10.488   Max.   :1.00   F      :32          
+##                                  (Other):58</code></pre>
 <p>The <tt>cutpoints</tt> contain a record, for each feature, of data type, break points, and labels. Here are two examples of the kind of information stored for a cutpoint.</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a>dt<span class="op">$</span>cutpoints[[<span class="dv">1</span>]]</span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a>dt<span class="op">$</span>cutpoints[[<span class="dv">1</span>]]</span></code></pre></div>
 <pre><code>## $breaks
 ## [1]     -Inf 6.541307      Inf
 ## 
@@ -448,7 +444,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 ## 
 ## $Type
 ## [1] &quot;symmetric binary&quot;</code></pre>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1"></a>dt<span class="op">$</span>cutpoints[[<span class="dv">5</span>]]</span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a>dt<span class="op">$</span>cutpoints[[<span class="dv">5</span>]]</span></code></pre></div>
 <pre><code>## $breaks
 ##        0% 18.63384% 41.91345% 59.88372% 76.79872%      100% 
 ##      -Inf  5.489846  5.916301  6.142115  6.512071       Inf 
@@ -459,9 +455,9 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 ## $Type
 ## [1] &quot;nominal&quot;</code></pre>
 <p>And here is an overview of the number of features of each type.</p>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1"></a>cp &lt;-<span class="st"> </span>dt<span class="op">$</span>cutpoints</span>
-<span id="cb37-2"><a href="#cb37-2"></a>type &lt;-<span class="st"> </span><span class="kw">sapply</span>(cp, <span class="cf">function</span>(X) { X<span class="op">$</span>Type })</span>
-<span id="cb37-3"><a href="#cb37-3"></a><span class="kw">table</span>(type)</span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1"></a>cp &lt;-<span class="st"> </span>dt<span class="op">$</span>cutpoints</span>
+<span id="cb35-2"><a href="#cb35-2"></a>type &lt;-<span class="st"> </span><span class="kw">sapply</span>(cp, <span class="cf">function</span>(X) { X<span class="op">$</span>Type })</span>
+<span id="cb35-3"><a href="#cb35-3"></a><span class="kw">table</span>(type)</span></code></pre></div>
 <pre><code>## type
 ##       continuous          nominal          ordinal symmetric binary 
 ##                6                5                1                8</code></pre>
@@ -476,15 +472,15 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <li>The <tt>ClinicalNoiseModel</tt>.</li>
 <li>The <tt>cutpoints</tt> generated by <tt>setDataTypes</tt>.</li>
 </ol>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1"></a>mte &lt;-<span class="st"> </span><span class="kw">MixedTypeEngine</span>(ce,</span>
-<span id="cb39-2"><a href="#cb39-2"></a>                       <span class="dt">noise =</span> cnm,</span>
-<span id="cb39-3"><a href="#cb39-3"></a>                       <span class="dt">cutpoints =</span> dt<span class="op">$</span>cutpoints)</span>
-<span id="cb39-4"><a href="#cb39-4"></a><span class="kw">summary</span>(mte)</span></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1"></a>mte &lt;-<span class="st"> </span><span class="kw">MixedTypeEngine</span>(ce,</span>
+<span id="cb37-2"><a href="#cb37-2"></a>                       <span class="dt">noise =</span> cnm,</span>
+<span id="cb37-3"><a href="#cb37-3"></a>                       <span class="dt">cutpoints =</span> dt<span class="op">$</span>cutpoints)</span>
+<span id="cb37-4"><a href="#cb37-4"></a><span class="kw">summary</span>(mte)</span></code></pre></div>
 <pre><code>## A &#39;MixedTypeEngine&#39; (MTE) based on:
 ## A &#39;CancerEngine&#39; using the cancer model:
 ## --------------
 ## Clinical Simulation Model (Raw) , a CancerModel object constructed via the function call:
-##  CancerModel(name = &quot;Clinical Simulation Model (Raw)&quot;, nPossible = NP, nPattern = nClusters, HIT = hitfn, prevalence = Prevalence(isWeighted, nClusters)) 
+##  CancerModel(name = &quot;Clinical Simulation Model (Raw)&quot;, nPossible = NP, nPattern = nClusters, HIT = hitfn, survivalModel = survivalModel, prevalence = Prevalence(isWeighted, nClusters)) 
 ## 
 ## Pattern prevalences:
 ## [1] 0.3173905 0.1315154 0.1265533 0.4245408
@@ -518,26 +514,26 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 ##       continuous          nominal          ordinal symmetric binary 
 ##                6                5                1                8</code></pre>
 <p>With <tt>rand</tt>, the user can easily generate new data sets with the same simulation parameters.</p>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1"></a>dset2 &lt;-<span class="st"> </span><span class="kw">rand</span>(mte, <span class="dv">20</span>)</span>
-<span id="cb42-2"><a href="#cb42-2"></a><span class="kw">class</span>(dset2)</span></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1"></a>dset2 &lt;-<span class="st"> </span><span class="kw">rand</span>(mte, <span class="dv">20</span>)</span>
+<span id="cb40-2"><a href="#cb40-2"></a><span class="kw">class</span>(dset2)</span></code></pre></div>
 <pre><code>## [1] &quot;data.frame&quot;</code></pre>
-<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1"></a><span class="kw">summary</span>(dset2)</span></code></pre></div>
-<pre><code>##  V1     V2           V3        V4     V5    V6          V7        V8   
-##  0: 9   0:11   Min.   :1.404   0:12   R:7   R:2   Min.   :5.701   R:5  
-##  1:11   1: 9   1st Qu.:2.104   1: 8   S:1   S:4   1st Qu.:6.628   S:1  
-##                Median :2.866          T:4   T:0   Median :7.090   T:6  
-##                Mean   :2.941          U:2   U:0   Mean   :7.142   U:8  
-##                3rd Qu.:3.575          V:6   V:3   3rd Qu.:7.633        
-##                Max.   :4.903                W:4   Max.   :9.281        
-##                                             X:7                        
-##  V9          V10         V11        V12    V13    V14         V15       
-##  0:11   Z      :4   Min.   :4.143   0:19   0: 6   0: 0   Min.   :6.499  
-##  1: 9   S      :3   1st Qu.:5.075   1: 1   1:14   1:20   1st Qu.:6.767  
-##         T      :3   Median :5.419                        Median :7.228  
-##         U      :3   Mean   :5.464                        Mean   :7.138  
-##         W      :2   3rd Qu.:5.959                        3rd Qu.:7.362  
-##         Y      :2   Max.   :6.590                        Max.   :8.024  
-##         (Other):3                                                       
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1"></a><span class="kw">summary</span>(dset2)</span></code></pre></div>
+<pre><code>##  V1     V2           V3        V4     V5    V6          V7        V8    V9    
+##  0: 9   0:11   Min.   :1.404   0:12   R:7   R:2   Min.   :5.701   R:5   0:11  
+##  1:11   1: 9   1st Qu.:2.104   1: 8   S:1   S:4   1st Qu.:6.628   S:1   1: 9  
+##                Median :2.866          T:4   T:0   Median :7.090   T:6         
+##                Mean   :2.941          U:2   U:0   Mean   :7.142   U:8         
+##                3rd Qu.:3.575          V:6   V:3   3rd Qu.:7.633               
+##                Max.   :4.903                W:4   Max.   :9.281               
+##                                             X:7                               
+##       V10         V11        V12    V13    V14         V15       
+##  Z      :4   Min.   :4.143   0:19   0: 6   0: 0   Min.   :6.499  
+##  S      :3   1st Qu.:5.075   1: 1   1:14   1:20   1st Qu.:6.767  
+##  T      :3   Median :5.419                        Median :7.228  
+##  U      :3   Mean   :5.464                        Mean   :7.138  
+##  W      :2   3rd Qu.:5.959                        3rd Qu.:7.362  
+##  Y      :2   Max.   :6.590                        Max.   :8.024  
+##  (Other):3                                                       
 ##       V16             V17        V18         V19    V20  
 ##  Min.   :7.014   Min.   :7.984   0:11   E      :5   R:9  
 ##  1st Qu.:7.607   1st Qu.:8.763   1: 9   C      :4   S:5  
@@ -547,15 +543,15 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 ##  Max.   :9.613   Max.   :9.957          A      :0        
 ##                                         (Other):0</code></pre>
 <p>By using the <tt>keepal</tt> argument othe function, you can keep the intermediate datasets produced by the <tt>rand</tt> method.</p>
-<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1"></a>dset3 &lt;-<span class="st"> </span><span class="kw">rand</span>(mte, <span class="dv">25</span>, <span class="dt">keepall =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb46-2"><a href="#cb46-2"></a><span class="kw">class</span>(dset3)</span></code></pre></div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1"></a>dset3 &lt;-<span class="st"> </span><span class="kw">rand</span>(mte, <span class="dv">25</span>, <span class="dt">keepall =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb44-2"><a href="#cb44-2"></a><span class="kw">class</span>(dset3)</span></code></pre></div>
 <pre><code>## [1] &quot;list&quot;</code></pre>
-<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1"></a><span class="kw">names</span>(dset3)</span></code></pre></div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1"></a><span class="kw">names</span>(dset3)</span></code></pre></div>
 <pre><code>## [1] &quot;raw&quot;      &quot;clinical&quot; &quot;noisy&quot;    &quot;binned&quot;</code></pre>
 <p>The <tt>raw</tt> and <tt>noisy</tt> elements have the rows as (future clinical) features and the columns as patients/samples.</p>
-<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1"></a><span class="kw">dim</span>(dset3<span class="op">$</span>raw)</span></code></pre></div>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1"></a><span class="kw">dim</span>(dset3<span class="op">$</span>raw)</span></code></pre></div>
 <pre><code>## [1] 20 25</code></pre>
-<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1"></a><span class="kw">summary</span>(<span class="kw">t</span>(dset3<span class="op">$</span>raw))</span></code></pre></div>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1"></a><span class="kw">summary</span>(<span class="kw">t</span>(dset3<span class="op">$</span>raw))</span></code></pre></div>
 <pre><code>##        V1              V2              V3              V4       
 ##  Min.   :4.674   Min.   :4.895   Min.   :1.559   Min.   :3.494  
 ##  1st Qu.:5.829   1st Qu.:6.646   1st Qu.:2.350   1st Qu.:5.219  
@@ -591,9 +587,9 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 ##  Mean   : 9.215   Mean   :4.362   Mean   : 7.207   Mean   :4.687  
 ##  3rd Qu.: 9.511   3rd Qu.:4.584   3rd Qu.: 7.438   3rd Qu.:5.053  
 ##  Max.   :10.069   Max.   :6.170   Max.   :10.253   Max.   :7.106</code></pre>
-<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1"></a><span class="kw">dim</span>(<span class="kw">t</span>(dset3<span class="op">$</span>noisy))</span></code></pre></div>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1"></a><span class="kw">dim</span>(<span class="kw">t</span>(dset3<span class="op">$</span>noisy))</span></code></pre></div>
 <pre><code>## [1] 25 20</code></pre>
-<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1"></a><span class="kw">summary</span>(dset3<span class="op">$</span>noisy)</span></code></pre></div>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1"></a><span class="kw">summary</span>(dset3<span class="op">$</span>noisy)</span></code></pre></div>
 <pre><code>##        V1               V2              V3              V4       
 ##  Min.   : 1.565   Min.   :1.556   Min.   :4.251   Min.   :2.712  
 ##  1st Qu.: 5.880   1st Qu.:5.632   1st Qu.:5.336   1st Qu.:5.596  
@@ -644,31 +640,31 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 ##  3rd Qu.:7.638  
 ##  Max.   :9.074</code></pre>
 <p>Noisy data arises by adding simulated noise to the raw data.</p>
-<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1"></a><span class="kw">plot</span>(dset3<span class="op">$</span>raw[<span class="dv">5</span>,], dset3<span class="op">$</span>noisy[<span class="dv">5</span>,], <span class="dt">xlab =</span> <span class="st">&quot;Raw&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Noisy&quot;</span>, <span class="dt">pch=</span><span class="dv">16</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1"></a><span class="kw">plot</span>(dset3<span class="op">$</span>raw[<span class="dv">5</span>,], dset3<span class="op">$</span>noisy[<span class="dv">5</span>,], <span class="dt">xlab =</span> <span class="st">&quot;Raw&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Noisy&quot;</span>, <span class="dt">pch=</span><span class="dv">16</span>)</span></code></pre></div>
 <div class="figure">
 <img src="data:image/png;base64,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" alt />
 <p class="caption">Raw and noisy data.</p>
 </div>
 <p>The <tt>binned&gt;,/tt&lt; elemnt has columns as features and rows as samoples. Binned data arises by applying cut points to noisy data.</p>
-<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1"></a><span class="kw">dim</span>(dset3<span class="op">$</span>binned)</span></code></pre></div>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1"></a><span class="kw">dim</span>(dset3<span class="op">$</span>binned)</span></code></pre></div>
 <pre><code>## [1] 25 20</code></pre>
-<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1"></a><span class="kw">summary</span>(dset3<span class="op">$</span>binned)</span></code></pre></div>
-<pre><code>##  V1     V2           V3        V4     V5     V6          V7        V8   
-##  0: 6   0: 7   Min.   :1.556   0:14   R: 4   R:1   Min.   :4.603   R:7  
-##  1:19   1:18   1st Qu.:2.351   1:11   S: 2   S:6   1st Qu.:6.403   S:4  
-##                Median :2.748          T: 6   T:6   Median :7.183   T:6  
-##                Mean   :2.956          U: 2   U:2   Mean   :7.035   U:8  
-##                3rd Qu.:3.461          V:11   V:7   3rd Qu.:7.771        
-##                Max.   :4.963                 W:3   Max.   :8.721        
-##                                              X:0                        
-##  V9          V10         V11        V12    V13    V14         V15       
-##  0:18   V      :5   Min.   :3.919   0:21   0: 5   0: 2   Min.   :6.071  
-##  1: 7   W      :5   1st Qu.:4.934   1: 4   1:20   1:23   1st Qu.:6.493  
-##         S      :3   Median :5.376                        Median :7.043  
-##         T      :3   Mean   :5.449                        Mean   :6.951  
-##         X      :3   3rd Qu.:5.933                        3rd Qu.:7.446  
-##         Y      :2   Max.   :6.834                        Max.   :7.685  
-##         (Other):4                                                       
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1"></a><span class="kw">summary</span>(dset3<span class="op">$</span>binned)</span></code></pre></div>
+<pre><code>##  V1     V2           V3        V4     V5     V6          V7        V8    V9    
+##  0: 6   0: 7   Min.   :1.556   0:14   R: 4   R:1   Min.   :4.603   R:7   0:18  
+##  1:19   1:18   1st Qu.:2.351   1:11   S: 2   S:6   1st Qu.:6.403   S:4   1: 7  
+##                Median :2.748          T: 6   T:6   Median :7.183   T:6         
+##                Mean   :2.956          U: 2   U:2   Mean   :7.035   U:8         
+##                3rd Qu.:3.461          V:11   V:7   3rd Qu.:7.771               
+##                Max.   :4.963                 W:3   Max.   :8.721               
+##                                              X:0                               
+##       V10         V11        V12    V13    V14         V15       
+##  V      :5   Min.   :3.919   0:21   0: 5   0: 2   Min.   :6.071  
+##  W      :5   1st Qu.:4.934   1: 4   1:20   1:23   1st Qu.:6.493  
+##  S      :3   Median :5.376                        Median :7.043  
+##  T      :3   Mean   :5.449                        Mean   :6.951  
+##  X      :3   3rd Qu.:5.933                        3rd Qu.:7.446  
+##  Y      :2   Max.   :6.834                        Max.   :7.685  
+##  (Other):4                                                       
 ##       V16             V17         V18         V19    V20  
 ##  Min.   :6.681   Min.   : 7.820   0:20   B      :6   R:8  
 ##  1st Qu.:7.571   1st Qu.: 9.072   1: 5   E      :6   S:7  
@@ -677,9 +673,9 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 ##  3rd Qu.:8.410   3rd Qu.: 9.529          H      :3        
 ##  Max.   :9.201   Max.   :10.038          C      :2        
 ##                                          (Other):2</code></pre>
-<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1"></a><span class="kw">plot</span>(dset3<span class="op">$</span>binned[,<span class="dv">5</span>], dset3<span class="op">$</span>noisy[<span class="dv">5</span>,], <span class="dt">xlab =</span> <span class="st">&quot;Binned&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Noisy&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1"></a><span class="kw">plot</span>(dset3<span class="op">$</span>binned[,<span class="dv">5</span>], dset3<span class="op">$</span>noisy[<span class="dv">5</span>,], <span class="dt">xlab =</span> <span class="st">&quot;Binned&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Noisy&quot;</span>)</span></code></pre></div>
 <div class="figure">
-<img src="data:image/png;base64,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" alt />
+<img src="data:image/png;base64,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" alt />
 <p class="caption">Noisy and binned data.</p>
 </div>
 </div>

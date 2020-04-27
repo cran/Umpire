@@ -24,7 +24,8 @@
 ##    nClusters = number of clusters/subtypes
 ##    weighted = logical value used to define prevalence of subtypes
 ##    bHyp = object of class BlockHyperParameters, if not NULL
-ClinicalEngine <- function(nFeatures, nClusters, isWeighted, bHyp = NULL){
+ClinicalEngine <- function(nFeatures, nClusters, isWeighted,
+                           bHyp = NULL, survivalModel = NULL){
   hitfn <- ifelse(nFeatures < 15, # small feature size
                   function(n) 2,
                   ifelse(nFeatures < 45,
@@ -50,7 +51,8 @@ ClinicalEngine <- function(nFeatures, nClusters, isWeighted, bHyp = NULL){
                      nPossible = NP, # number of possible hits
                      nPattern = nClusters,        # number of subtypes
                      HIT = hitfn,
-                     prevalence = Prevalence(isWeighted, nClusters)
+                     prevalence = Prevalence(isWeighted, nClusters),
+                     survivalModel = survivalModel
                      )
   if (is.null(bHyp)) {
     blockInfo <- computeBlocks(nFeatures, NP)
@@ -166,6 +168,7 @@ ClinicalNoiseModel <- function(nFeatures, shape = 1.02, scale = 0.05/shape) {
 ## multivariate distribution.
 setDataTypes <- function(dataset, pCont, pBin, pCat,
                          pNominal = 0.5, range = c(3, 9),
+                         exact = FALSE,
                          inputRowsAreFeatures = TRUE) {
   if (inputRowsAreFeatures) { # always want output columns as features
     dataset = t(dataset)
@@ -178,8 +181,22 @@ setDataTypes <- function(dataset, pCont, pBin, pCat,
     warning("Probabilities are being rescaled so they add to 1.")
     probs <- probs/sum(probs)
   }
-  Type <- sample(c("continuous", "binary", "categorical"),
-                 size = nFeats, replace = TRUE, prob = probs)
+  if (exact) {
+    counts <- round(nFeats * probs)
+    miscount <- sum(counts) - nFeats
+    if (miscount < 0) { # add more
+      miscount <- (-1)*miscount # now positive
+      counts[1:miscount]  <-  1 + counts[1:miscount]
+    } else if (miscount > 0) {
+      counts[1:miscount]  <-  -1 + counts[1:miscount]
+    }
+    if (sum(counts) != nFeats) stop("fix failed\n")
+    Type  <- rep(c("continuous", "binary", "categorical"),
+                 times = counts)
+  } else {
+    Type <- sample(c("continuous", "binary", "categorical"),
+                   size = nFeats, replace = TRUE, prob = probs)
+  }
   isCont <- Type == "continuous"
   for (W in which(isCont)) {
     L <- list(breaks = NULL, labels = NULL, Type = "continuous")
@@ -223,6 +240,17 @@ makeCategories <- function(dataset, pNominal = 0.5, range = c(3,9)) {
     r <- rdirichlet(1, rep(20, cc)) # magic=20 determined empirically
     ## Construct a vector of percentage cutoffs
     pcuts <- c(0, cumsum(r))
+    pcuts[length(pcuts)]  <- 1 # could be epsilon less than 1; sigh
+    ##DEBUG
+    if (FALSE & 0.3083 < r[1] & r[1] < 0.30837) {
+      cat("I = ", I, ";  pcuts: ", pcuts, "\n", file=stderr())
+      cat("DD:", dim(dataset), "\n", file = stderr())
+      print(summary(dataset[, I]))
+      for (J in 1:length(pcuts)) {
+        cat("J=", J, "; P=", pcuts[J], file = stderr())
+        cat("; Q =", quantile(dataset[,I], pcuts[J]), "\n", file = stderr())
+      }
+    }
     qcuts <- quantile(dataset[, I], pcuts)
 #    cat(I, "before:", length(qcuts), length(id), "\n", file=stderr())
     while (any(duplicated(qcuts))) {
@@ -254,7 +282,7 @@ makeCategories <- function(dataset, pNominal = 0.5, range = c(3,9)) {
 makeBinary <- function(dataset) {
   ## KRC: May need to check that BI works on single-row data matrix
   ## if it looks bimodal, split at the midpoint of modes
-  bi <- bimodalIndex(t(dataset)) # use the bimodal index (Wang et al)
+  bi <- bimodalIndex(t(dataset), verbose = FALSE ) # use bimodal index (Wang et al)
   my.bi <- 1.1                # and cutoff from the paper
   cutpoints <- list()
   for (I in 1:ncol(dataset)) {
