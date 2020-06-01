@@ -22,8 +22,8 @@ CancerModel(name,
             nPossible,
             nPattern,
             HIT = function(n) 5,
-            SURV = function(n) rnorm(n, 0, 2),
-            OUT = function(n) rnorm(n, 0, 2),
+            SURV = function(n) rnorm(n, 0, 0.3),
+            OUT = function(n) rnorm(n, 0, 0.3),
             survivalModel=NULL,
             prevalence=NULL)
 nPatterns(object)
@@ -72,7 +72,7 @@ survivalCoefficients(object)
       containing the coeffieicents associated with each hit in a
       Cox proportional hazards model of survival.}
     \item{\code{outcomeBeta}:}{Object of class \code{"numeric"}
-      contaning the coefficients associated with each hit in a logistic
+      containing the coefficients associated with each hit in a logistic
       model to predict a binary outcome.}
     \item{\code{prevalence}:}{Object of class \code{"numeric"}
       containing the prevalence of each cancer subtype. }

@@ -191,7 +191,8 @@ the same simulation parameters.
 ```{r}
 dset2 <- rand(mte, 20)
 class(dset2)
-summary(dset2)
+summary(dset2$data)
+summary(dset2$clinical)
 ```
 
 By using the <tt>keepal</tt> argument othe function, you can keep the
@@ -214,7 +215,7 @@ Noisy data arises by adding simulated noise to the raw data.
 plot(dset3$raw[5,], dset3$noisy[5,], xlab = "Raw", ylab = "Noisy", pch=16)
 ```
 
-The <tt>binned>,/tt< elemnt has columns as features and rows as samoples.
+The <tt>binned</tt> element has columns as features and rows as samples.
 Binned data arises by applying cut points to noisy data.
 ```{r fig.cap = "Noisy and binned data."}
 dim(dset3$binned)

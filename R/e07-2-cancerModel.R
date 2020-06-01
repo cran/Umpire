@@ -49,8 +49,8 @@ setClass("CancerModel",
 #      the cancer subtypes.
 CancerModel <- function(name, nPossible, nPattern,
                         HIT=function(n) 5,
-                        SURV=function(n) rnorm(n, 0, 2),
-                        OUT=function(n) rnorm(n, 0, 2),
+                        SURV=function(n) rnorm(n, 0, 0.3),
+                        OUT=function(n) rnorm(n, 0, 0.3),
                         survivalModel=NULL,
                         prevalence=NULL) {
   call <- match.call()
@@ -83,6 +83,9 @@ CancerModel <- function(name, nPossible, nPattern,
   o <- OUT(nPossible) # this leaves outcome uncorrelated with survival
 #  o <- sort(o)[rank(s)] # force outcome to correlate with survival
 # KRC: which do we really want to use? Should this be user-selectable?
+  scramble <- sample(nPossible)
+  s <- c(s[s > 0], s[s <= 0])[scramble]
+  o <- c(o[o > 0], o[o <= 0])[scramble]
   new("CancerModel",
       name=name,
       hitPattern=hp,
@@ -190,3 +193,4 @@ setMethod("rand", "CancerModel", function(object,  n, balance=FALSE, ...) {
              survival)
 })
 
+ 

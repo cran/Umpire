@@ -59,7 +59,8 @@ summary(mte)
 ## -----------------------------------------------------------------------------
 dset2 <- rand(mte, 20)
 class(dset2)
-summary(dset2)
+summary(dset2$data)
+summary(dset2$clinical)
 
 ## -----------------------------------------------------------------------------
 dset3 <- rand(mte, 25, keepall = TRUE)

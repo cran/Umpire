@@ -420,6 +420,8 @@ setMethod("rand", "MixedTypeEngine", function(object, n,
   if (keepall) {
     binned <- list(raw = dataset$data, clinical = dataset$clinical,
                    noisy = hazy, binned = binned)
+  } else {
+    binned <- list(raw = dataset$data, clinical = dataset$clinical)
   }
   binned
 })

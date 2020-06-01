@@ -330,12 +330,12 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 ## [1] 0.3173905 0.1315154 0.1265533 0.4245408
 ## 
 ## Survival effects:
-##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-## -4.2340 -2.7133 -1.6120 -1.4374 -0.1001  1.4111 
+##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+## -0.63510 -0.40700 -0.24181 -0.21561 -0.01502  0.21166 
 ## 
 ## Outcome effects:
-##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
-## -1.52504 -0.53980 -0.23605 -0.06496  0.77952  0.82696 
+##      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+## -0.228756 -0.080970 -0.035408 -0.009743  0.116928  0.124044 
 ## --------------
 ## 
 ## Base expression given by:
@@ -360,13 +360,13 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="kw">names</span>(dset)</span></code></pre></div>
 <pre><code>## [1] &quot;clinical&quot; &quot;data&quot;</code></pre>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="kw">summary</span>(dset<span class="op">$</span>clinical)</span></code></pre></div>
-<pre><code>##  CancerSubType  Outcome         LFU          Event        
-##  Min.   :1.00   Bad :205   Min.   :12.00   Mode :logical  
-##  1st Qu.:1.00   Good: 95   1st Qu.:26.00   FALSE:295      
-##  Median :3.00              Median :42.50   TRUE :5        
-##  Mean   :2.73              Mean   :41.47                  
-##  3rd Qu.:4.00              3rd Qu.:55.00                  
-##  Max.   :4.00              Max.   :71.00</code></pre>
+<pre><code>##  CancerSubType   Outcome         LFU          Event        
+##  Min.   :1.000   Bad :151   Min.   : 0.00   Mode :logical  
+##  1st Qu.:1.000   Good:149   1st Qu.:19.75   FALSE:197      
+##  Median :3.000              Median :31.50   TRUE :103      
+##  Mean   :2.717              Mean   :33.81                  
+##  3rd Qu.:4.000              3rd Qu.:49.00                  
+##  Max.   :4.000              Max.   :71.00</code></pre>
 <p>The raw <tt>data</tt> are simulated as a matrix of continuous values.</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="kw">class</span>(dset<span class="op">$</span>data)</span></code></pre></div>
 <pre><code>## [1] &quot;matrix&quot; &quot;array&quot;</code></pre>
@@ -381,8 +381,8 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <pre><code>## A &#39;NoiseModel&#39; with:
 ##   additive offset = 0
 ##   additive scale distributed as:
-##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
-## 0.003632 0.027081 0.034741 0.061475 0.076802 0.185948 
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+## 0.00601 0.03036 0.05852 0.06958 0.09856 0.18595 
 ##   multiplicative scale = 0</code></pre>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a>noisy &lt;-<span class="st"> </span><span class="kw">blur</span>(cnm, dset<span class="op">$</span>data)</span></code></pre></div>
 </div>
@@ -402,65 +402,67 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="kw">dim</span>(dt<span class="op">$</span>binned)</span></code></pre></div>
 <pre><code>## [1] 300  20</code></pre>
 <div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a><span class="kw">summary</span>(dt<span class="op">$</span>binned)</span></code></pre></div>
-<pre><code>##        V1             V2            V3               V4         V5     V6    
-##  Min.   :0.00   Min.   :0.0   Min.   :0.5845   Min.   :0.0000   R:70   R:42  
-##  1st Qu.:0.00   1st Qu.:0.0   1st Qu.:2.1179   1st Qu.:0.0000   S:56   S:43  
-##  Median :1.00   Median :1.0   Median :2.8589   Median :0.0000   T:50   T:34  
-##  Mean   :0.69   Mean   :0.7   Mean   :2.8963   Mean   :0.4033   U:54   U:44  
-##  3rd Qu.:1.00   3rd Qu.:1.0   3rd Qu.:3.7239   3rd Qu.:1.0000   V:70   V:51  
-##  Max.   :1.00   Max.   :1.0   Max.   :5.0888   Max.   :1.0000          W:46  
-##                                                                        X:40  
-##        V7        V8           V9            V10          V11       
-##  Min.   :4.974   R:83   Min.   :0.00   V      :44   Min.   :3.370  
-##  1st Qu.:6.378   S:53   1st Qu.:0.00   T      :41   1st Qu.:5.035  
-##  Median :7.032   T:79   Median :0.00   W      :35   Median :5.565  
-##  Mean   :6.983   U:85   Mean   :0.34   X      :35   Mean   :5.564  
-##  3rd Qu.:7.547          3rd Qu.:1.00   S      :34   3rd Qu.:6.177  
-##  Max.   :9.120          Max.   :1.00   U      :32   Max.   :7.137  
-##                                        (Other):79                  
-##       V12            V13            V14            V15             V16       
-##  Min.   :0.00   Min.   :0.00   Min.   :0.00   Min.   :5.191   Min.   :6.086  
-##  1st Qu.:0.00   1st Qu.:1.00   1st Qu.:1.00   1st Qu.:6.600   1st Qu.:7.622  
-##  Median :0.00   Median :1.00   Median :1.00   Median :6.950   Median :8.013  
-##  Mean   :0.17   Mean   :0.79   Mean   :0.92   Mean   :6.960   Mean   :8.042  
-##  3rd Qu.:0.00   3rd Qu.:1.00   3rd Qu.:1.00   3rd Qu.:7.275   3rd Qu.:8.486  
-##  Max.   :1.00   Max.   :1.00   Max.   :1.00   Max.   :8.468   Max.   :9.660  
-##                                                                              
-##       V17              V18            V19     V20    
-##  Min.   : 7.631   Min.   :0.00   E      :55   R: 61  
-##  1st Qu.: 8.767   1st Qu.:0.00   C      :43   S:105  
-##  Median : 9.146   Median :0.00   H      :43   T: 83  
-##  Mean   : 9.123   Mean   :0.25   B      :36   U: 51  
-##  3rd Qu.: 9.491   3rd Qu.:0.25   G      :33          
-##  Max.   :10.488   Max.   :1.00   F      :32          
-##                                  (Other):58</code></pre>
+<pre><code>##  V1           V2              V3               V4               V5      
+##  R:52   Min.   :5.191   Min.   :0.0000   Min.   :0.0000   Min.   :0.00  
+##  S:55   1st Qu.:6.490   1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:0.00  
+##  T:32   Median :6.971   Median :0.0000   Median :0.0000   Median :1.00  
+##  U:59   Mean   :6.965   Mean   :0.4133   Mean   :0.4067   Mean   :0.66  
+##  V:50   3rd Qu.:7.400   3rd Qu.:1.0000   3rd Qu.:1.0000   3rd Qu.:1.00  
+##  W:52   Max.   :8.792   Max.   :1.0000   Max.   :1.0000   Max.   :1.00  
+##                                                                         
+##        V6              V7              V8              V9            V10    
+##  Min.   :1.923   Min.   :5.454   Min.   :3.563   Min.   :0.00   X      :53  
+##  1st Qu.:3.578   1st Qu.:6.566   1st Qu.:4.902   1st Qu.:0.00   V      :48  
+##  Median :4.024   Median :7.071   Median :5.378   Median :0.00   Y      :38  
+##  Mean   :4.054   Mean   :7.065   Mean   :5.300   Mean   :0.19   S      :36  
+##  3rd Qu.:4.502   3rd Qu.:7.540   3rd Qu.:5.679   3rd Qu.:0.00   T      :36  
+##  Max.   :5.795   Max.   :8.859   Max.   :6.873   Max.   :1.00   W      :34  
+##                                                                 (Other):55  
+##  V11         V12             V13            V14           V15          V16     
+##  R:40   Min.   :2.797   Min.   :0.00   Min.   :0.0   G      :55   Min.   :0.0  
+##  S:48   1st Qu.:4.086   1st Qu.:0.00   1st Qu.:0.0   E      :42   1st Qu.:0.0  
+##  T:57   Median :4.460   Median :0.00   Median :0.0   F      :41   Median :1.0  
+##  U:39   Mean   :4.440   Mean   :0.07   Mean   :0.1   D      :38   Mean   :0.7  
+##  V:56   3rd Qu.:4.825   3rd Qu.:0.00   3rd Qu.:0.0   A      :34   3rd Qu.:1.0  
+##  W:60   Max.   :5.798   Max.   :1.00   Max.   :1.0   C      :33   Max.   :1.0  
+##                                                      (Other):57                
+##       V17             V18        V19         V20       
+##  Min.   :2.606   Min.   :4.993   A:52   Min.   :2.356  
+##  1st Qu.:4.053   1st Qu.:6.608   B:30   1st Qu.:4.796  
+##  Median :4.528   Median :7.179   C:40   Median :5.529  
+##  Mean   :4.515   Mean   :7.123   D:38   Mean   :5.505  
+##  3rd Qu.:4.912   3rd Qu.:7.608   E:47   3rd Qu.:6.190  
+##  Max.   :6.610   Max.   :8.738   F:48   Max.   :8.570  
+##                                  G:45</code></pre>
 <p>The <tt>cutpoints</tt> contain a record, for each feature, of data type, break points, and labels. Here are two examples of the kind of information stored for a cutpoint.</p>
 <div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a>dt<span class="op">$</span>cutpoints[[<span class="dv">1</span>]]</span></code></pre></div>
 <pre><code>## $breaks
-## [1]     -Inf 6.541307      Inf
+##        0% 10.55853% 28.88869% 48.54916% 66.07294% 82.94035%      100% 
+##      -Inf  4.055293  4.728019  5.149966  5.491690  5.900582       Inf 
 ## 
 ## $labels
-## [1] 1 0
-## 
-## $Type
-## [1] &quot;symmetric binary&quot;</code></pre>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a>dt<span class="op">$</span>cutpoints[[<span class="dv">5</span>]]</span></code></pre></div>
-<pre><code>## $breaks
-##        0% 18.63384% 41.91345% 59.88372% 76.79872%      100% 
-##      -Inf  5.489846  5.916301  6.142115  6.512071       Inf 
-## 
-## $labels
-## [1] &quot;S&quot; &quot;R&quot; &quot;U&quot; &quot;T&quot; &quot;V&quot;
+## [1] &quot;T&quot; &quot;S&quot; &quot;U&quot; &quot;W&quot; &quot;V&quot; &quot;R&quot;
 ## 
 ## $Type
 ## [1] &quot;nominal&quot;</code></pre>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a>dt<span class="op">$</span>cutpoints[[<span class="dv">5</span>]]</span></code></pre></div>
+<pre><code>## $breaks
+## [1]    -Inf 7.35767     Inf
+## 
+## $labels
+## [1] 0 1
+## 
+## $Type
+## [1] &quot;symmetric binary&quot;</code></pre>
 <p>And here is an overview of the number of features of each type.</p>
 <div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1"></a>cp &lt;-<span class="st"> </span>dt<span class="op">$</span>cutpoints</span>
 <span id="cb35-2"><a href="#cb35-2"></a>type &lt;-<span class="st"> </span><span class="kw">sapply</span>(cp, <span class="cf">function</span>(X) { X<span class="op">$</span>Type })</span>
 <span id="cb35-3"><a href="#cb35-3"></a><span class="kw">table</span>(type)</span></code></pre></div>
 <pre><code>## type
-##       continuous          nominal          ordinal symmetric binary 
-##                6                5                1                8</code></pre>
+## asymmetric binary        continuous           nominal           ordinal 
+##                 1                 8                 3                 2 
+##  symmetric binary 
+##                 6</code></pre>
 <p>The <tt>cupoitns</tt> should be saved for downstream use in the <tt>MixedTypeEngine</tt>.</p>
 </div>
 <div id="the-mixedtypeengine" class="section level2">
@@ -486,12 +488,12 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 ## [1] 0.3173905 0.1315154 0.1265533 0.4245408
 ## 
 ## Survival effects:
-##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-## -4.2340 -2.7133 -1.6120 -1.4374 -0.1001  1.4111 
+##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+## -0.63510 -0.40700 -0.24181 -0.21561 -0.01502  0.21166 
 ## 
 ## Outcome effects:
-##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
-## -1.52504 -0.53980 -0.23605 -0.06496  0.77952  0.82696 
+##      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+## -0.228756 -0.080970 -0.035408 -0.009743  0.116928  0.124044 
 ## --------------
 ## 
 ## Base expression given by:
@@ -505,177 +507,165 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 ## A &#39;NoiseModel&#39; with:
 ##   additive offset = 0
 ##   additive scale distributed as:
-##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
-## 0.003632 0.027081 0.034741 0.061475 0.076802 0.185948 
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+## 0.00601 0.03036 0.05852 0.06958 0.09856 0.18595 
 ##   multiplicative scale = 0
 ## ---------------
 ## The MTE simulates clinical data of these types:</code></pre>
 <pre><code>## 
-##       continuous          nominal          ordinal symmetric binary 
-##                6                5                1                8</code></pre>
+## asymmetric binary        continuous           nominal           ordinal 
+##                 1                 8                 3                 2 
+##  symmetric binary 
+##                 6</code></pre>
 <p>With <tt>rand</tt>, the user can easily generate new data sets with the same simulation parameters.</p>
 <div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1"></a>dset2 &lt;-<span class="st"> </span><span class="kw">rand</span>(mte, <span class="dv">20</span>)</span>
 <span id="cb40-2"><a href="#cb40-2"></a><span class="kw">class</span>(dset2)</span></code></pre></div>
-<pre><code>## [1] &quot;data.frame&quot;</code></pre>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1"></a><span class="kw">summary</span>(dset2)</span></code></pre></div>
-<pre><code>##  V1     V2           V3        V4     V5    V6          V7        V8    V9    
-##  0: 9   0:11   Min.   :1.404   0:12   R:7   R:2   Min.   :5.701   R:5   0:11  
-##  1:11   1: 9   1st Qu.:2.104   1: 8   S:1   S:4   1st Qu.:6.628   S:1   1: 9  
-##                Median :2.866          T:4   T:0   Median :7.090   T:6         
-##                Mean   :2.941          U:2   U:0   Mean   :7.142   U:8         
-##                3rd Qu.:3.575          V:6   V:3   3rd Qu.:7.633               
-##                Max.   :4.903                W:4   Max.   :9.281               
-##                                             X:7                               
-##       V10         V11        V12    V13    V14         V15       
-##  Z      :4   Min.   :4.143   0:19   0: 6   0: 0   Min.   :6.499  
-##  S      :3   1st Qu.:5.075   1: 1   1:14   1:20   1st Qu.:6.767  
-##  T      :3   Median :5.419                        Median :7.228  
-##  U      :3   Mean   :5.464                        Mean   :7.138  
-##  W      :2   3rd Qu.:5.959                        3rd Qu.:7.362  
-##  Y      :2   Max.   :6.590                        Max.   :8.024  
-##  (Other):3                                                       
-##       V16             V17        V18         V19    V20  
-##  Min.   :7.014   Min.   :7.984   0:11   E      :5   R:9  
-##  1st Qu.:7.607   1st Qu.:8.763   1: 9   C      :4   S:5  
-##  Median :8.067   Median :9.077          D      :4   T:4  
-##  Mean   :8.113   Mean   :9.048          H      :4   U:2  
-##  3rd Qu.:8.636   3rd Qu.:9.316          B      :3        
-##  Max.   :9.613   Max.   :9.957          A      :0        
-##                                         (Other):0</code></pre>
-<p>By using the <tt>keepal</tt> argument othe function, you can keep the intermediate datasets produced by the <tt>rand</tt> method.</p>
-<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1"></a>dset3 &lt;-<span class="st"> </span><span class="kw">rand</span>(mte, <span class="dv">25</span>, <span class="dt">keepall =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb44-2"><a href="#cb44-2"></a><span class="kw">class</span>(dset3)</span></code></pre></div>
 <pre><code>## [1] &quot;list&quot;</code></pre>
-<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1"></a><span class="kw">names</span>(dset3)</span></code></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1"></a><span class="kw">summary</span>(dset2<span class="op">$</span>data)</span></code></pre></div>
+<pre><code>## Length  Class   Mode 
+##      0   NULL   NULL</code></pre>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1"></a><span class="kw">summary</span>(dset2<span class="op">$</span>clinical)</span></code></pre></div>
+<pre><code>##  CancerSubType Outcome        LFU          Event        
+##  Min.   :1.0   Bad :14   Min.   : 7.00   Mode :logical  
+##  1st Qu.:2.0   Good: 6   1st Qu.:18.75   FALSE:13       
+##  Median :3.5             Median :37.00   TRUE :7        
+##  Mean   :2.9             Mean   :37.35                  
+##  3rd Qu.:4.0             3rd Qu.:54.75                  
+##  Max.   :4.0             Max.   :70.00</code></pre>
+<p>By using the <tt>keepal</tt> argument othe function, you can keep the intermediate datasets produced by the <tt>rand</tt> method.</p>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1"></a>dset3 &lt;-<span class="st"> </span><span class="kw">rand</span>(mte, <span class="dv">25</span>, <span class="dt">keepall =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb46-2"><a href="#cb46-2"></a><span class="kw">class</span>(dset3)</span></code></pre></div>
+<pre><code>## [1] &quot;list&quot;</code></pre>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1"></a><span class="kw">names</span>(dset3)</span></code></pre></div>
 <pre><code>## [1] &quot;raw&quot;      &quot;clinical&quot; &quot;noisy&quot;    &quot;binned&quot;</code></pre>
 <p>The <tt>raw</tt> and <tt>noisy</tt> elements have the rows as (future clinical) features and the columns as patients/samples.</p>
-<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1"></a><span class="kw">dim</span>(dset3<span class="op">$</span>raw)</span></code></pre></div>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1"></a><span class="kw">dim</span>(dset3<span class="op">$</span>raw)</span></code></pre></div>
 <pre><code>## [1] 20 25</code></pre>
-<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1"></a><span class="kw">summary</span>(<span class="kw">t</span>(dset3<span class="op">$</span>raw))</span></code></pre></div>
-<pre><code>##        V1              V2              V3              V4       
-##  Min.   :4.674   Min.   :4.895   Min.   :1.559   Min.   :3.494  
-##  1st Qu.:5.829   1st Qu.:6.646   1st Qu.:2.350   1st Qu.:5.219  
-##  Median :6.154   Median :7.096   Median :2.748   Median :5.881  
-##  Mean   :6.070   Mean   :7.038   Mean   :2.957   Mean   :5.913  
-##  3rd Qu.:6.544   3rd Qu.:7.451   3rd Qu.:3.458   3rd Qu.:6.782  
-##  Max.   :7.295   Max.   :8.603   Max.   :4.961   Max.   :8.162  
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1"></a><span class="kw">summary</span>(<span class="kw">t</span>(dset3<span class="op">$</span>raw))</span></code></pre></div>
+<pre><code>##        V1              V2              V3              V4        
+##  Min.   :4.028   Min.   :5.816   Min.   :1.901   Min.   : 8.537  
+##  1st Qu.:4.535   1st Qu.:6.560   1st Qu.:2.348   1st Qu.: 9.466  
+##  Median :5.425   Median :6.903   Median :3.227   Median :10.173  
+##  Mean   :5.344   Mean   :6.967   Mean   :3.393   Mean   :10.087  
+##  3rd Qu.:5.893   3rd Qu.:7.295   3rd Qu.:4.194   3rd Qu.:10.607  
+##  Max.   :7.708   Max.   :8.818   Max.   :5.475   Max.   :11.558  
 ##        V5              V6              V7              V8       
-##  Min.   :5.148   Min.   :3.537   Min.   :4.614   Min.   :7.267  
-##  1st Qu.:5.954   1st Qu.:4.939   1st Qu.:6.370   1st Qu.:8.221  
-##  Median :6.455   Median :5.085   Median :7.124   Median :8.502  
-##  Mean   :6.377   Mean   :5.176   Mean   :7.019   Mean   :8.499  
-##  3rd Qu.:6.864   3rd Qu.:5.483   3rd Qu.:7.828   3rd Qu.:8.787  
-##  Max.   :7.291   Max.   :6.089   Max.   :8.734   Max.   :9.441  
+##  Min.   :6.180   Min.   :2.825   Min.   :6.297   Min.   :4.460  
+##  1st Qu.:6.920   1st Qu.:3.395   1st Qu.:6.818   1st Qu.:4.967  
+##  Median :7.402   Median :3.797   Median :7.160   Median :5.058  
+##  Mean   :7.366   Mean   :3.894   Mean   :7.207   Mean   :5.194  
+##  3rd Qu.:7.798   3rd Qu.:4.177   3rd Qu.:7.574   3rd Qu.:5.448  
+##  Max.   :8.676   Max.   :5.618   Max.   :8.578   Max.   :6.076  
 ##        V9             V10             V11             V12       
-##  Min.   :5.639   Min.   :5.303   Min.   :3.861   Min.   :4.381  
-##  1st Qu.:6.965   1st Qu.:6.888   1st Qu.:4.863   1st Qu.:5.071  
-##  Median :7.345   Median :7.268   Median :5.436   Median :5.444  
-##  Mean   :7.185   Mean   :7.227   Mean   :5.457   Mean   :5.478  
-##  3rd Qu.:7.621   3rd Qu.:7.668   3rd Qu.:6.082   3rd Qu.:5.893  
-##  Max.   :8.020   Max.   :8.741   Max.   :6.871   Max.   :6.519  
-##       V13             V14             V15             V16       
-##  Min.   :4.888   Min.   :6.667   Min.   :6.107   Min.   :6.782  
-##  1st Qu.:6.590   1st Qu.:7.637   1st Qu.:6.546   1st Qu.:7.711  
-##  Median :7.143   Median :8.142   Median :7.030   Median :8.030  
-##  Mean   :6.946   Mean   :8.130   Mean   :6.939   Mean   :8.100  
-##  3rd Qu.:7.308   3rd Qu.:8.729   3rd Qu.:7.267   3rd Qu.:8.634  
-##  Max.   :8.675   Max.   :9.791   Max.   :7.719   Max.   :9.095  
-##       V17              V18             V19              V20       
-##  Min.   : 7.804   Min.   :2.900   Min.   : 5.922   Min.   :3.486  
-##  1st Qu.: 9.050   1st Qu.:3.976   1st Qu.: 6.531   1st Qu.:4.241  
-##  Median : 9.272   Median :4.359   Median : 7.223   Median :4.659  
-##  Mean   : 9.215   Mean   :4.362   Mean   : 7.207   Mean   :4.687  
-##  3rd Qu.: 9.511   3rd Qu.:4.584   3rd Qu.: 7.438   3rd Qu.:5.053  
-##  Max.   :10.069   Max.   :6.170   Max.   :10.253   Max.   :7.106</code></pre>
-<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1"></a><span class="kw">dim</span>(<span class="kw">t</span>(dset3<span class="op">$</span>noisy))</span></code></pre></div>
-<pre><code>## [1] 25 20</code></pre>
-<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1"></a><span class="kw">summary</span>(dset3<span class="op">$</span>noisy)</span></code></pre></div>
-<pre><code>##        V1               V2              V3              V4       
-##  Min.   : 1.565   Min.   :1.556   Min.   :4.251   Min.   :2.712  
-##  1st Qu.: 5.880   1st Qu.:5.632   1st Qu.:5.336   1st Qu.:5.596  
-##  Median : 6.853   Median :6.301   Median :6.532   Median :6.823  
-##  Mean   : 6.608   Mean   :6.569   Mean   :6.484   Mean   :6.700  
-##  3rd Qu.: 7.602   3rd Qu.:8.128   3rd Qu.:7.532   3rd Qu.:8.155  
-##  Max.   :10.320   Max.   :9.768   Max.   :9.808   Max.   :9.372  
-##        V5              V6              V7              V8       
-##  Min.   :1.653   Min.   :2.748   Min.   :3.304   Min.   :3.166  
-##  1st Qu.:5.631   1st Qu.:5.199   1st Qu.:6.097   1st Qu.:5.839  
-##  Median :6.557   Median :6.801   Median :6.550   Median :6.836  
-##  Mean   :6.323   Mean   :6.523   Mean   :6.747   Mean   :6.432  
-##  3rd Qu.:7.651   3rd Qu.:7.581   3rd Qu.:7.831   3rd Qu.:7.131  
-##  Max.   :9.380   Max.   :9.934   Max.   :9.327   Max.   :8.953  
-##        V9             V10             V11             V12       
-##  Min.   :4.348   Min.   :3.870   Min.   :2.450   Min.   :3.461  
-##  1st Qu.:5.116   1st Qu.:4.967   1st Qu.:5.094   1st Qu.:5.695  
-##  Median :6.716   Median :6.680   Median :5.964   Median :6.766  
-##  Mean   :6.553   Mean   :6.365   Mean   :6.194   Mean   :6.621  
-##  3rd Qu.:7.371   3rd Qu.:7.138   3rd Qu.:7.379   3rd Qu.:7.694  
-##  Max.   :8.802   Max.   :9.028   Max.   :8.566   Max.   :9.122  
-##       V13             V14              V15             V16       
-##  Min.   :2.351   Min.   : 3.955   Min.   :3.374   Min.   :3.520  
-##  1st Qu.:5.018   1st Qu.: 5.006   1st Qu.:5.426   1st Qu.:5.245  
-##  Median :6.645   Median : 6.797   Median :6.777   Median :6.506  
-##  Mean   :6.380   Mean   : 6.460   Mean   :6.684   Mean   :6.515  
-##  3rd Qu.:7.822   3rd Qu.: 7.402   3rd Qu.:7.570   3rd Qu.:7.415  
-##  Max.   :9.529   Max.   :10.038   Max.   :9.847   Max.   :9.302  
+##  Min.   :5.222   Min.   :3.932   Min.   :4.832   Min.   :3.785  
+##  1st Qu.:6.182   1st Qu.:4.690   1st Qu.:6.019   1st Qu.:4.342  
+##  Median :6.739   Median :5.504   Median :6.374   Median :4.566  
+##  Mean   :6.704   Mean   :5.418   Mean   :6.354   Mean   :4.762  
+##  3rd Qu.:7.039   3rd Qu.:5.760   3rd Qu.:6.648   3rd Qu.:5.125  
+##  Max.   :8.556   Max.   :6.929   Max.   :8.148   Max.   :6.479  
+##       V13             V14             V15             V16        
+##  Min.   :6.050   Min.   :6.125   Min.   :4.136   Min.   : 8.014  
+##  1st Qu.:7.135   1st Qu.:6.816   1st Qu.:5.638   1st Qu.: 8.626  
+##  Median :7.417   Median :7.232   Median :5.940   Median : 9.244  
+##  Mean   :7.434   Mean   :7.261   Mean   :6.088   Mean   : 9.071  
+##  3rd Qu.:7.879   3rd Qu.:7.779   3rd Qu.:6.558   3rd Qu.: 9.471  
+##  Max.   :8.551   Max.   :8.156   Max.   :7.543   Max.   :10.093  
 ##       V17             V18             V19             V20       
-##  Min.   :2.084   Min.   :2.301   Min.   :2.732   Min.   :3.012  
-##  1st Qu.:5.526   1st Qu.:4.656   1st Qu.:5.401   1st Qu.:5.263  
-##  Median :6.483   Median :6.024   Median :6.597   Median :7.150  
-##  Mean   :6.327   Mean   :5.983   Mean   :6.293   Mean   :6.757  
-##  3rd Qu.:7.538   3rd Qu.:6.975   3rd Qu.:7.241   3rd Qu.:7.976  
-##  Max.   :9.300   Max.   :9.372   Max.   :9.685   Max.   :9.451  
-##       V21             V22             V23             V24       
-##  Min.   :2.592   Min.   :2.238   Min.   :3.665   Min.   :2.457  
-##  1st Qu.:5.681   1st Qu.:4.926   1st Qu.:5.956   1st Qu.:5.709  
-##  Median :6.860   Median :6.431   Median :6.887   Median :6.935  
-##  Mean   :6.532   Mean   :6.345   Mean   :6.877   Mean   :6.548  
-##  3rd Qu.:7.693   3rd Qu.:7.612   3rd Qu.:7.638   3rd Qu.:7.754  
-##  Max.   :9.259   Max.   :9.072   Max.   :9.852   Max.   :9.285  
-##       V25       
-##  Min.   :2.888  
-##  1st Qu.:5.239  
-##  Median :7.010  
-##  Mean   :6.619  
-##  3rd Qu.:7.638  
-##  Max.   :9.074</code></pre>
+##  Min.   :3.173   Min.   :6.379   Min.   :6.508   Min.   :3.353  
+##  1st Qu.:4.296   1st Qu.:6.945   1st Qu.:6.940   1st Qu.:5.250  
+##  Median :4.825   Median :7.320   Median :7.200   Median :5.704  
+##  Mean   :4.745   Mean   :7.391   Mean   :7.217   Mean   :5.511  
+##  3rd Qu.:5.095   3rd Qu.:7.713   3rd Qu.:7.461   3rd Qu.:5.980  
+##  Max.   :6.312   Max.   :8.652   Max.   :7.832   Max.   :6.405</code></pre>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1"></a><span class="kw">dim</span>(<span class="kw">t</span>(dset3<span class="op">$</span>noisy))</span></code></pre></div>
+<pre><code>## [1] 25 20</code></pre>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1"></a><span class="kw">summary</span>(dset3<span class="op">$</span>noisy)</span></code></pre></div>
+<pre><code>##        V1               V2               V3               V4        
+##  Min.   : 2.287   Min.   : 2.790   Min.   : 3.404   Min.   : 2.941  
+##  1st Qu.: 5.653   1st Qu.: 5.500   1st Qu.: 5.874   1st Qu.: 4.558  
+##  Median : 6.501   Median : 6.554   Median : 6.646   Median : 6.218  
+##  Mean   : 6.526   Mean   : 6.454   Mean   : 6.631   Mean   : 5.930  
+##  3rd Qu.: 7.464   3rd Qu.: 7.159   3rd Qu.: 7.208   3rd Qu.: 6.799  
+##  Max.   :10.206   Max.   :10.271   Max.   :11.206   Max.   :10.230  
+##        V5               V6               V7              V8       
+##  Min.   : 3.935   Min.   : 2.921   Min.   :3.263   Min.   :3.144  
+##  1st Qu.: 5.416   1st Qu.: 5.379   1st Qu.:5.225   1st Qu.:5.209  
+##  Median : 6.396   Median : 6.525   Median :6.327   Median :6.762  
+##  Mean   : 6.584   Mean   : 6.472   Mean   :6.236   Mean   :6.488  
+##  3rd Qu.: 7.621   3rd Qu.: 7.611   3rd Qu.:7.206   3rd Qu.:7.431  
+##  Max.   :10.188   Max.   :10.608   Max.   :9.419   Max.   :9.205  
+##        V9             V10              V11             V12       
+##  Min.   :4.166   Min.   : 3.269   Min.   :3.477   Min.   :3.911  
+##  1st Qu.:5.557   1st Qu.: 5.045   1st Qu.:5.453   1st Qu.:4.915  
+##  Median :6.553   Median : 5.996   Median :6.502   Median :6.594  
+##  Mean   :6.560   Mean   : 6.344   Mean   :6.422   Mean   :6.518  
+##  3rd Qu.:7.577   3rd Qu.: 7.538   3rd Qu.:7.424   3rd Qu.:7.928  
+##  Max.   :9.531   Max.   :10.452   Max.   :9.666   Max.   :9.389  
+##       V13             V14              V15              V16       
+##  Min.   :3.563   Min.   : 1.941   Min.   : 2.194   Min.   :2.342  
+##  1st Qu.:4.991   1st Qu.: 4.889   1st Qu.: 5.451   1st Qu.:5.049  
+##  Median :6.358   Median : 6.504   Median : 6.011   Median :6.771  
+##  Mean   :6.305   Mean   : 6.221   Mean   : 6.317   Mean   :6.308  
+##  3rd Qu.:7.340   3rd Qu.: 7.357   3rd Qu.: 7.125   3rd Qu.:7.561  
+##  Max.   :9.488   Max.   :10.614   Max.   :11.498   Max.   :9.884  
+##       V17              V18              V19              V20       
+##  Min.   : 2.422   Min.   : 3.298   Min.   : 2.968   Min.   :3.418  
+##  1st Qu.: 4.938   1st Qu.: 4.864   1st Qu.: 5.692   1st Qu.:5.108  
+##  Median : 6.343   Median : 6.580   Median : 6.632   Median :6.509  
+##  Mean   : 6.094   Mean   : 6.343   Mean   : 6.614   Mean   :6.304  
+##  3rd Qu.: 7.371   3rd Qu.: 7.227   3rd Qu.: 7.567   3rd Qu.:7.192  
+##  Max.   :10.057   Max.   :10.199   Max.   :11.299   Max.   :9.389  
+##       V21              V22             V23             V24       
+##  Min.   : 2.162   Min.   :4.072   Min.   :3.012   Min.   :3.273  
+##  1st Qu.: 5.056   1st Qu.:5.482   1st Qu.:4.889   1st Qu.:5.086  
+##  Median : 6.289   Median :6.592   Median :6.095   Median :6.165  
+##  Mean   : 6.327   Mean   :6.533   Mean   :6.270   Mean   :6.166  
+##  3rd Qu.: 7.420   3rd Qu.:7.702   3rd Qu.:7.600   3rd Qu.:6.810  
+##  Max.   :11.418   Max.   :9.413   Max.   :9.530   Max.   :9.474  
+##       V25        
+##  Min.   : 2.118  
+##  1st Qu.: 4.941  
+##  Median : 6.422  
+##  Mean   : 6.176  
+##  3rd Qu.: 7.322  
+##  Max.   :10.860</code></pre>
 <p>Noisy data arises by adding simulated noise to the raw data.</p>
-<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1"></a><span class="kw">plot</span>(dset3<span class="op">$</span>raw[<span class="dv">5</span>,], dset3<span class="op">$</span>noisy[<span class="dv">5</span>,], <span class="dt">xlab =</span> <span class="st">&quot;Raw&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Noisy&quot;</span>, <span class="dt">pch=</span><span class="dv">16</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1"></a><span class="kw">plot</span>(dset3<span class="op">$</span>raw[<span class="dv">5</span>,], dset3<span class="op">$</span>noisy[<span class="dv">5</span>,], <span class="dt">xlab =</span> <span class="st">&quot;Raw&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Noisy&quot;</span>, <span class="dt">pch=</span><span class="dv">16</span>)</span></code></pre></div>
 <div class="figure">
-<img src="data:image/png;base64,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" alt />
+<img src="data:image/png;base64,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" alt />
 <p class="caption">Raw and noisy data.</p>
 </div>
-<p>The <tt>binned&gt;,/tt&lt; elemnt has columns as features and rows as samoples. Binned data arises by applying cut points to noisy data.</p>
-<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1"></a><span class="kw">dim</span>(dset3<span class="op">$</span>binned)</span></code></pre></div>
+<p>The <tt>binned</tt> element has columns as features and rows as samples. Binned data arises by applying cut points to noisy data.</p>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1"></a><span class="kw">dim</span>(dset3<span class="op">$</span>binned)</span></code></pre></div>
 <pre><code>## [1] 25 20</code></pre>
-<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1"></a><span class="kw">summary</span>(dset3<span class="op">$</span>binned)</span></code></pre></div>
-<pre><code>##  V1     V2           V3        V4     V5     V6          V7        V8    V9    
-##  0: 6   0: 7   Min.   :1.556   0:14   R: 4   R:1   Min.   :4.603   R:7   0:18  
-##  1:19   1:18   1st Qu.:2.351   1:11   S: 2   S:6   1st Qu.:6.403   S:4   1: 7  
-##                Median :2.748          T: 6   T:6   Median :7.183   T:6         
-##                Mean   :2.956          U: 2   U:2   Mean   :7.035   U:8         
-##                3rd Qu.:3.461          V:11   V:7   3rd Qu.:7.771               
-##                Max.   :4.963                 W:3   Max.   :8.721               
-##                                              X:0                               
-##       V10         V11        V12    V13    V14         V15       
-##  V      :5   Min.   :3.919   0:21   0: 5   0: 2   Min.   :6.071  
-##  W      :5   1st Qu.:4.934   1: 4   1:20   1:23   1st Qu.:6.493  
-##  S      :3   Median :5.376                        Median :7.043  
-##  T      :3   Mean   :5.449                        Mean   :6.951  
-##  X      :3   3rd Qu.:5.933                        3rd Qu.:7.446  
-##  Y      :2   Max.   :6.834                        Max.   :7.685  
-##  (Other):4                                                       
-##       V16             V17         V18         V19    V20  
-##  Min.   :6.681   Min.   : 7.820   0:20   B      :6   R:8  
-##  1st Qu.:7.571   1st Qu.: 9.072   1: 5   E      :6   S:7  
-##  Median :8.085   Median : 9.259          F      :3   T:8  
-##  Mean   :8.065   Mean   : 9.219          G      :3   U:2  
-##  3rd Qu.:8.410   3rd Qu.: 9.529          H      :3        
-##  Max.   :9.201   Max.   :10.038          C      :2        
-##                                          (Other):2</code></pre>
-<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1"></a><span class="kw">plot</span>(dset3<span class="op">$</span>binned[,<span class="dv">5</span>], dset3<span class="op">$</span>noisy[<span class="dv">5</span>,], <span class="dt">xlab =</span> <span class="st">&quot;Binned&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Noisy&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1"></a><span class="kw">summary</span>(dset3<span class="op">$</span>binned)</span></code></pre></div>
+<pre><code>##  V1          V2        V3     V4     V5           V6              V7       
+##  R:6   Min.   :5.878   0:12   0:11   0:12   Min.   :2.921   Min.   :6.165  
+##  S:7   1st Qu.:6.477   1:13   1:14   1:13   1st Qu.:3.418   1st Qu.:6.821  
+##  T:2   Median :6.918                        Median :3.895   Median :7.197  
+##  U:2   Mean   :6.959                        Mean   :3.892   Mean   :7.199  
+##  V:5   3rd Qu.:7.247                        3rd Qu.:4.306   3rd Qu.:7.658  
+##  W:3   Max.   :8.810                        Max.   :5.739   Max.   :8.577  
+##                                                                            
+##        V8        V9          V10    V11        V12        V13    V14   
+##  Min.   :4.482   0:19   T      :6   R:5   Min.   :3.578   0:22   0:22  
+##  1st Qu.:4.925   1: 6   R      :5   S:3   1st Qu.:4.252   1: 3   1: 3  
+##  Median :5.103          X      :4   T:2   Median :4.619                
+##  Mean   :5.195          S      :3   U:4   Mean   :4.771                
+##  3rd Qu.:5.443          V      :2   V:7   3rd Qu.:5.154                
+##  Max.   :6.113          W      :2   W:4   Max.   :6.379                
+##                         (Other):3                                      
+##       V15    V16         V17             V18        V19        V20       
+##  D      :5   0: 8   Min.   :3.156   Min.   :6.304   A:3   Min.   :3.360  
+##  F      :4   1:17   1st Qu.:4.293   1st Qu.:6.895   B:2   1st Qu.:5.263  
+##  G      :4          Median :4.838   Median :7.368   C:4   Median :5.701  
+##  A      :3          Mean   :4.748   Mean   :7.388   D:6   Mean   :5.496  
+##  B      :3          3rd Qu.:5.105   3rd Qu.:7.768   E:6   3rd Qu.:5.971  
+##  H      :3          Max.   :6.333   Max.   :8.630   F:4   Max.   :6.361  
+##  (Other):3                                          G:0</code></pre>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1"></a><span class="kw">plot</span>(dset3<span class="op">$</span>binned[,<span class="dv">5</span>], dset3<span class="op">$</span>noisy[<span class="dv">5</span>,], <span class="dt">xlab =</span> <span class="st">&quot;Binned&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Noisy&quot;</span>)</span></code></pre></div>
 <div class="figure">
-<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASAAAAEgCAMAAAAjXV6yAAAAUVBMVEUAAAAAADoAAGYAOpAAZrY6AAA6ADo6Ojo6kNtmAABmtrZmtv+QOgCQkGaQtpCQ2/+2ZgC2///T09PbkDrb/9vb////tmb/25D//7b//9v///+/eMlPAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAGWElEQVR4nO2dC3OjNhgAnUvSxo3b40rjxP7/P7Q80+ucpQUEiJjdmcSZQdaHN3piCQ5XiXLIfQJbR0GAggAFAQoCFAQoCFAQoCBAQYCCAAUBCgIUBCgIUBCgIEBBgIIABQEKAhQEKAhQEKAgQEGAggAFAQoCFAQoCFAQoCBAQYCCAAUBCgIUBCgIUBCgIEBBgIIABQEKAhQEKAhQEKAgQEGAggAFAQoCFAQoCFAQoCBAQYCCAAUBCgIUBCgIUBCgIEBBgIIABQEKAhQEKAhQEKAgQEGAggAFAQoCZhZ0+DLkEjRvdjMQcKGgjlBpUVBLI+eWIQW1HH76fePA4BxmQ0HrZpeMVYywkSbs5qehIEBBgIIABQEKAhQEKAhQELCyoPEX6paFLyTuvAQd/g6goBYFAQoCFATYSAMKAhQ0gtunpKBPFAQoKEhstYKCAAUBiwj6OL5Uv89Vcf32Y4bssrKcoPLxrf7rNT27rCwmqFPTaErMLiuLCXp/bgSdA5VMQfstQR/HwxOkrZJUPF375jolbm6mlKCy+vSBz/1J5ejhe9WRhdLdtaDrMEfzxM3N5DaojI1yZoybm2mC6jHg6/VyCrTAP1HusBerm+DWTKgPj+Syse/FmCm9WNX6rhc3N199ssrXTFMDjE9Yj23KvpYFKKrK9/58OAQL22znj9/bpAYYn7B4fHt/froWkeFi4+e37ytMVjcoqP7M56oPi7TQzfi5Fbj0VGOjguoSEurAuySXUzOQXHqyusU2qHj6OD6+fRxjVaw6Vq5TgjYoqJlmXU6xGevH8duPpgidQ630PQsaxLk9y6DFO26DVo5L+SgI8tmYoKoDb6+Gpc3l71fQbChopew22YvVk6zwLGvmuLkznSCovdBcHgKzrJnj5s50vKBuDhEcI88cd1huS1SuLuvRCfsJ+vjLiZPi5uY+StCC3FUbtAR31YvdCJM8DPjq4yAKoyAIs7agz4nYxLnYQn3xgHirl6DiS3w3H5yqDZ6rTRRUlaSkTuxuq1jHOe1ax5i4uZkkqIx/azhr3NxMEHQ5pTU/4+LmZtISvLTmZ1zc3IwWlN78jIubm7GCSlzBOXPc3Kw8UBwfNzd3PtVIR0GAggAFAYsIcr8Y4H4xYMJunykT7VVYTNDg/WLJFySWJX8JWnz5QRoLCaoLwMD9YnsUdB2zX2yPVWxUdgqC7HYuiPeL7bQNCuXya/HYeQlaKbvlUBDgZBVwsgrkn2psnPyT1Y1jCQLyT1YpbuZhUv7JKsXNPNDe/DhIQZRQQZDwTtug+eIqCBIqCBLaBkFCBUFCq9i2URCgIEBBQDZBX4ZMgiYFoXNIe3viJ1RQWvB5UFBaEAUpKC2IghSUFkRBCrpjFAQoCFAQoCBAQYCCAAUBCgIUBCgIUBCgIGBhQZdT+yVL8M5EzcLQ4MJ9uAt4/4iC4uaa28upe1f8SQbA4oKaczuH7k3UHihit7dsHgUTzT0g6DNqMPoQ1hEU/B8W8cM10wX1zwgJHB7GOoJC5zik8E8X1DxpJrKoexCZS9CZb+yUIKjdNxF8Ssog1hEUvsdwfYfd+C2dEgS1x5Nq2Fq9WKyVrNIs00i3W2u77TdTWaME1Y8ti1NEClGKoHrrTeRxV0NYpYoF93b0/91YMxER1D8tLvzQuOLxn5RB0HWtNig00OmLQOxG+jFBJXVT54e/Im8fwjqC6ieX3Tx+bu6OGt49dI0Lakc6kQp6Of2eePvVlcZBZUhBM5mI9sMxQW0nEFMQDDwUJ6uAggAFAQoCFAQoCFAQoCBAQYCCAAUBCgIUBCgIUBCgIEBBgIIABQEKAhQEKAhQEKAgQEGAggAFAVsSVDRrreov6oP3q/6PtIV1w9mUoGYVQjnsk+9X0MBFqXsW9Nr9/HGsFzf2r/VSlm7JfvXHw5+7FVQ+9ZIqBVV961+bn/fnl3bB1Dm+qGg+NiWoXRFbaWoFvTSLGP/3Wi/Waxc2RrcvzMimBDUlqF5b3lez+lf/2jY6lZ12QeN+26C6Bt0U1G38eS33LqgMCOqNWIIe324J+hw8tm3QwOFSMtsTdD683myDWiVF153tuBfrpxq/CGrGQU312us4aJMoCFAQoCBAQYCCAAUBCgIUBCgIUBCgIEBBgIIABQEKAhQEKAhQEKAgQEGAggAFAQoC/gXsVgxemrbqYAAAAABJRU5ErkJggg==" alt />
+<img src="data:image/png;base64,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" alt />
 <p class="caption">Noisy and binned data.</p>
 </div>
 </div>
