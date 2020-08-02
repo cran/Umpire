@@ -139,9 +139,8 @@ outcomeCoefficients <- function(object) {
 }
 
 setMethod("summary", "CancerModel", function(object, ...) {
-  cat(paste(object@name,
-            ", a CancerModel object constructed via the function call:\n",
-            as.character(list(object@call)), "\n"))
+  cat(paste(object@name, ", a CancerModel object constructed via:\n", sep=""))
+  cat(paste("  ", strwrap(as.character(list(object@call))), "\n"))
   cat("\nPattern prevalences:\n")
   print(object@prevalence)
   cat("\nSurvival effects:\n")

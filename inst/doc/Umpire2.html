@@ -15,6 +15,22 @@
 
 <title>Umpire 2.0: Clinically Realistic Simulations</title>
 
+<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
+// v0.0.1
+// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
+
+document.addEventListener('DOMContentLoaded', function() {
+  const codeList = document.getElementsByClassName("sourceCode");
+  for (var i = 0; i < codeList.length; i++) {
+    var linkList = codeList[i].getElementsByTagName('a');
+    for (var j = 0; j < linkList.length; j++) {
+      if (linkList[j].innerHTML === "") {
+        linkList[j].setAttribute('aria-hidden', 'true');
+      }
+    }
+  }
+});
+</script>
 
 
 <style type="text/css">code{white-space: pre;}</style>
@@ -323,8 +339,11 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb3-2"><a href="#cb3-2"></a><span class="kw">summary</span>(ce)</span></code></pre></div>
 <pre><code>## A &#39;CancerEngine&#39; using the cancer model:
 ## --------------
-## Clinical Simulation Model (Raw) , a CancerModel object constructed via the function call:
-##  CancerModel(name = &quot;Clinical Simulation Model (Raw)&quot;, nPossible = NP, nPattern = nClusters, HIT = hitfn, survivalModel = survivalModel, prevalence = Prevalence(isWeighted, nClusters)) 
+## Clinical Simulation Model (Raw), a CancerModel object constructed via:
+##    CancerModel(name = &quot;Clinical Simulation Model (Raw)&quot;, nPossible = NP, 
+##     nPattern = nClusters, HIT = hitfn, SURV = SURV, OUT = OUT, 
+##     survivalModel = survivalModel, prevalence = Prevalence(isWeighted, 
+##     nClusters)) 
 ## 
 ## Pattern prevalences:
 ## [1] 0.3173905 0.1315154 0.1265533 0.4245408
@@ -389,14 +408,14 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <div id="simulate-mixed-type-data" class="section level2">
 <h2>Simulate Mixed-Type Data</h2>
 <p><tt>Umpire 2.0</tt> allows the simulation of binary, nominal, and ordinal data from raw, continuous data in variable, user-defined mixtures. The user defines prevalences, summing to 1, of binary, continuous, and categorical data in the desired final mixture. For categorical features, the user may tune the percent of categorical data desired to be nominal and the range of the number of categories to be simulated.</p>
-<p>The data simulated above by the <tt>ClinicalEngine</tt> and <tt>ClinicalNoiseModel</tt> takes rows (not columns) as features, as an omics convention. Thus, by default, when generating data, rows are treated as features and columns as patients. The <tt>setDataTypes</tt> method transposes its results to a data frame where the columns are features and the rows are patients. This transposition both fits better with the conventions used for clinical data, but also supports the ability to store different kinds of (mixed-type) data in different columns.</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a>dt &lt;-<span class="st"> </span><span class="kw">setDataTypes</span>(dset<span class="op">$</span>data,</span>
+<p>The data simulated above by the <tt>ClinicalEngine</tt> and <tt>ClinicalNoiseModel</tt> takes rows (not columns) as features, as an omics convention. Thus, by default, when generating data, rows are treated as features and columns as patients. The <tt>makeDataTypes</tt> method transposes its results to a data frame where the columns are features and the rows are patients. This transposition both fits better with the conventions used for clinical data, but also supports the ability to store different kinds of (mixed-type) data in different columns.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a>dt &lt;-<span class="st"> </span><span class="kw">makeDataTypes</span>(dset<span class="op">$</span>data,</span>
 <span id="cb23-2"><a href="#cb23-2"></a>                   <span class="dt">pCont =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">3</span>, <span class="dt">pBin =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">3</span>, <span class="dt">pCat =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">3</span>,</span>
 <span id="cb23-3"><a href="#cb23-3"></a>                   <span class="dt">pNominal =</span> <span class="fl">0.5</span>, <span class="dt">range =</span> <span class="dv">3</span><span class="op">:</span><span class="dv">9</span>,</span>
 <span id="cb23-4"><a href="#cb23-4"></a>                   <span class="dt">inputRowsAreFeatures =</span> <span class="ot">TRUE</span>)</span>
 <span id="cb23-5"><a href="#cb23-5"></a><span class="kw">names</span>(dt)</span></code></pre></div>
 <pre><code>## [1] &quot;binned&quot;    &quot;cutpoints&quot;</code></pre>
-<p>The <tt>setDataTypes</tt> function generates a list containing two objects: a data.frame of mixed-type data…</p>
+<p>The <tt>makeDataTypes</tt> function generates a list containing two objects: a data.frame of mixed-type data…</p>
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a><span class="kw">class</span>(dt<span class="op">$</span>binned)</span></code></pre></div>
 <pre><code>## [1] &quot;data.frame&quot;</code></pre>
 <div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="kw">dim</span>(dt<span class="op">$</span>binned)</span></code></pre></div>
@@ -472,7 +491,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <ol style="list-style-type: decimal">
 <li>The <tt>ClinicalEngine</tt>, including parameters for generating the subtype pattern and survival model.</li>
 <li>The <tt>ClinicalNoiseModel</tt>.</li>
-<li>The <tt>cutpoints</tt> generated by <tt>setDataTypes</tt>.</li>
+<li>The <tt>cutpoints</tt> generated by <tt>makeDataTypes</tt>.</li>
 </ol>
 <div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1"></a>mte &lt;-<span class="st"> </span><span class="kw">MixedTypeEngine</span>(ce,</span>
 <span id="cb37-2"><a href="#cb37-2"></a>                       <span class="dt">noise =</span> cnm,</span>
@@ -481,8 +500,11 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <pre><code>## A &#39;MixedTypeEngine&#39; (MTE) based on:
 ## A &#39;CancerEngine&#39; using the cancer model:
 ## --------------
-## Clinical Simulation Model (Raw) , a CancerModel object constructed via the function call:
-##  CancerModel(name = &quot;Clinical Simulation Model (Raw)&quot;, nPossible = NP, nPattern = nClusters, HIT = hitfn, survivalModel = survivalModel, prevalence = Prevalence(isWeighted, nClusters)) 
+## Clinical Simulation Model (Raw), a CancerModel object constructed via:
+##    CancerModel(name = &quot;Clinical Simulation Model (Raw)&quot;, nPossible = NP, 
+##     nPattern = nClusters, HIT = hitfn, SURV = SURV, OUT = OUT, 
+##     survivalModel = survivalModel, prevalence = Prevalence(isWeighted, 
+##     nClusters)) 
 ## 
 ## Pattern prevalences:
 ## [1] 0.3173905 0.1315154 0.1265533 0.4245408

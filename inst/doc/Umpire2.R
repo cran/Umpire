@@ -30,7 +30,7 @@ summary(cnm)
 noisy <- blur(cnm, dset$data)
 
 ## -----------------------------------------------------------------------------
-dt <- setDataTypes(dset$data,
+dt <- makeDataTypes(dset$data,
                    pCont = 1/3, pBin = 1/3, pCat = 1/3,
                    pNominal = 0.5, range = 3:9,
                    inputRowsAreFeatures = TRUE)

@@ -32,6 +32,7 @@ exportMethods(alterMean)
 exportMethods(alterSD)
 exportMethods(blur)
 exportMethods(rand)
+exportMethods(addControl)
 
 ## Public functions
 export(nComponents)  # of an Engine
@@ -64,4 +65,5 @@ export(NormalVsCancerEngine)
 
 ## clinical stuff
 exportClasses(MixedTypeEngine)
-export("setDataTypes", "ClinicalNoiseModel", "ClinicalEngine", "MixedTypeEngine")
+export("makeDataTypes", "getDataTypes", "getDaisyTypes",
+       "ClinicalNoiseModel", "ClinicalEngine", "MixedTypeEngine")

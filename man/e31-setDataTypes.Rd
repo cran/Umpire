@@ -1,15 +1,19 @@
-\name{setDataTypes}
-\alias{setDataTypes}
+\name{makeDataTypes}
+\alias{makeDataTypes}
+\alias{getDataTypes}
+\alias{getDaisyTypes}
 \title{
 Discretize a Continuous Data Set to Mixed Types
 }
 \description{
-The setDataTypes function allows the user to discretize a continuous data set
+The makeDataTypes function allows the user to discretize a continuous data set
 generated from an engine of any type into binary, nominal, ordinal, or mixed-type data.
 }
 \usage{
-setDataTypes(dataset, pCont, pBin, pCat, pNominal = 0.5,
+makeDataTypes(dataset, pCont, pBin, pCat, pNominal = 0.5,
              range = c(3, 9), exact = FALSE, inputRowsAreFeatures = TRUE)
+getDataTypes(object)
+getDaisyTypes(object)
 }
 \arguments{
   \item{dataset}{A matrix or dataframe of continuous data.}
@@ -43,9 +47,10 @@ setDataTypes(dataset, pCont, pBin, pCat, pNominal = 0.5,
   \item{inputRowsAreFeatures}{
     Logical value indicating if features are to be simulated as rows 
     (TRUE) or columns (FALSE).
+  }
+  \item{object}{An object of the \code{MixedTypeEngine} class.}
 }
-}
-\details{The \code{setDataTypes} function is a critical step in the
+\details{The \code{makeDataTypes} function is a critical step in the
   construction of a \code{\link{MixedTypeEngine}}, which is an object
   that is used to simulate clinical mixed-type data instead of gene
   expression data. The standard process, as illustrated in the example,
@@ -63,7 +68,8 @@ setDataTypes(dataset, pCont, pBin, pCat, pNominal = 0.5,
   based on the \code{pNominal} parameter. The number of levels is
   uniformly selected in the specified \code{range}, and the fraction of
   data points assigned to each level is selected from a Dirichlet
-  distribution with alpha = c(20, 20, ..., 20). 
+  distribution with alpha = c(20, 20, ..., 20).
+
 }
 \value{
   A list containing:
@@ -74,6 +80,11 @@ setDataTypes(dataset, pCont, pBin, pCat, pNominal = 0.5,
       are stored. Cutpoints can be passed to a \code{\link{MixedTypeEngine}} 
       for storage and downstream use.
       }
+  The \code{getDataTypes} function returns a character vector listing
+  the type of data for each feature in a \code{MixedTypeEngine}. the
+  \code{getDaisyTypes} function converts this vector to a list suitable
+  for input to the \code{\link{daisy}} function in the \code{cluster}
+  package.
 }
 \references{
 Wang J, Wen S, Symmans WF, Pusztai L, Coombes KR. \cr\emph{The bimodality index: A criterion for discovering and ranking bimodal signatures from cancer gene expression profiling data.}\cr Cancer Inform 2009; 7:199-216.
@@ -105,7 +116,7 @@ cnm <- ClinicalNoiseModel(nrow(ce@localenv$eng)) # default
 noisy <- blur(cnm, dset$data)
 
 ## Set the data mixture
-dt <- setDataTypes(dset$data, 1/3, 1/3, 1/3, 0.3)
+dt <- makeDataTypes(dset$data, 1/3, 1/3, 1/3, 0.3)
 cp <- dt$cutpoints
 type <- sapply(cp, function(X) { X$Type })
 table(type)

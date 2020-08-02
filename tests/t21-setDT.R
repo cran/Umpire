@@ -7,7 +7,7 @@ dset <- rand(ce, 300)
 cnm <- ClinicalNoiseModel(N) # default shape and scale
 noisy <- blur(cnm, dset$data)
 # next line used to throw a subtle rounding error
-dt <- setDataTypes(dset$data, 1/3, 1/3, 1/3, 0.3,
+dt <- makeDataTypes(dset$data, 1/3, 1/3, 1/3, 0.3,
                    range = c(3, 9), exact = FALSE)
 
 
@@ -17,7 +17,7 @@ testfun <- function(NF, exact) {
   dset <- rand(ce, 300)
   cnm <- ClinicalNoiseModel(N) # default shape and scale
   noisy <- blur(cnm, dset$data)
-  dt <- setDataTypes(dset$data, 1/3, 1/3, 1/3, 0.3,
+  dt <- makeDataTypes(dset$data, 1/3, 1/3, 1/3, 0.3,
                      range = c(3, 9), exact = exact)
   invisible(dt)
 }

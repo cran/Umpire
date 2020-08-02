@@ -33,3 +33,7 @@ if (!isGeneric("blur"))
   setGeneric("blur",
      function(object, x, ...) standardGeneric("blur"))
 
+if (!isGeneric("addControl"))
+  setGeneric("addControl",
+     function(object, fraction = 0.5, ...) standardGeneric("addControl"))
+

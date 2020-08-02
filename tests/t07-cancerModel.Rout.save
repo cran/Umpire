@@ -1,6 +1,6 @@
 
-R version 3.6.1 (2019-07-05) -- "Action of the Toes"
-Copyright (C) 2019 The R Foundation for Statistical Computing
+R version 4.0.0 (2020-04-24) -- "Arbor Day"
+Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -32,8 +32,10 @@ Type 'q()' to quit R.
 > print(nHitsPerPattern(x))
  [1] 6 5 7 6 4 3 7 6 6 7
 > summary(x)
-test , a CancerModel object constructed via the function call:
- CancerModel(name = "test", nPossible = 30, nPattern = 10, HIT = function(n) 3 + rbinom(1, 4, 0.7), SURV = function(n) rnorm(n, 0, 2), OUT = function(n) rnorm(n, 0, 2)) 
+test, a CancerModel object constructed via:
+   CancerModel(name = "test", nPossible = 30, nPattern = 10, HIT = 
+    function(n) 3 + rbinom(1, 4, 0.7), SURV = function(n) rnorm(n, 0, 2), 
+    OUT = function(n) rnorm(n, 0, 2)) 
 
 Pattern prevalences:
  [1] 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1
@@ -88,4 +90,4 @@ Score (logrank) test = 67.98  on 1 df,   p=<2e-16
 > 
 > proc.time()
    user  system elapsed 
-   0.71    0.10    0.81 
+   0.75    0.10    0.89 

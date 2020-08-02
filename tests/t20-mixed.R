@@ -28,7 +28,7 @@ cnm <- ClinicalNoiseModel(N) # default shape and scale
 noisy <- blur(cnm, dset$data)
 
 ## Now we set the data types
-dt <- setDataTypes(dset$data, 1/3, 1/3, 1/3, 0.3, range = c(3, 9))
+dt <- makeDataTypes(dset$data, 1/3, 1/3, 1/3, 0.3, range = c(3, 9))
 cp <- dt$cutpoints
 type <- sapply(cp, function(X) { X$Type })
 table(type)

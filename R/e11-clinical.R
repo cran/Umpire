@@ -25,7 +25,9 @@
 ##    weighted = logical value used to define prevalence of subtypes
 ##    bHyp = object of class BlockHyperParameters, if not NULL
 ClinicalEngine <- function(nFeatures, nClusters, isWeighted,
-                           bHyp = NULL, survivalModel = NULL){
+                           bHyp = NULL, survivalModel = NULL,
+                           SURV = function(n) rnorm(n, 0, 0.3),
+                           OUT = function(n) rnorm(n, 0, 0.3)){
   hitfn <- ifelse(nFeatures < 15, # small feature size
                   function(n) 2,
                   ifelse(nFeatures < 45,
@@ -52,7 +54,9 @@ ClinicalEngine <- function(nFeatures, nClusters, isWeighted,
                      nPattern = nClusters,        # number of subtypes
                      HIT = hitfn,
                      prevalence = Prevalence(isWeighted, nClusters),
-                     survivalModel = survivalModel
+                     survivalModel = survivalModel,
+                     SURV = SURV,
+                     OUT = OUT
                      )
   if (is.null(bHyp)) {
     blockInfo <- computeBlocks(nFeatures, NP)
@@ -166,7 +170,7 @@ ClinicalNoiseModel <- function(nFeatures, shape = 1.02, scale = 0.05/shape) {
 ## used to create a "MixedTypeEngine" both for the ability to
 ## report parameters and to generate later test sets from the same
 ## multivariate distribution.
-setDataTypes <- function(dataset, pCont, pBin, pCat,
+makeDataTypes <- function(dataset, pCont, pBin, pCat,
                          pNominal = 0.5, range = c(3, 9),
                          exact = FALSE,
                          inputRowsAreFeatures = TRUE) {
@@ -320,10 +324,34 @@ setClass("MixedTypeEngine",
                    cutpoints = "list"))
 
 MixedTypeEngine <- function (ce, noise, cutpoints) {
+  if (is.list(ce)) {
+    ce <- do.call(ClinicalEngine, ce)
+  }
+  if (is.list(noise)) {
+    noise <- do.call(ClinicalNoiseModel, noise)
+  }
+  if ("N" %in% names(cutpoints)) {
+    raw <- rand(ce, cutpoints$N)
+    cutpoints$dataset <- blur(noise, raw$data)
+    w <- which(names(cutpoints) == "N")
+    cutpoints <- cutpoints[-w]
+    temp <- do.call(makeDataTypes, cutpoints)
+    cutpoints <- temp$cutpoints
+  }
   new("MixedTypeEngine",
       ce,
       noise = noise,
       cutpoints = cutpoints)
+}
+
+getDataTypes <- function(object) {
+  sapply(object@cutpoints, function(x) x$Type)
+}
+
+getDaisyTypes <- function(object) {
+  mtypes <- getDataTypes(object)
+  list(asymm = which(mtypes == "asymmetric binary"),
+       symm = which(mtypes == "symmetric binary"))
 }
 
 ## It's probably worth some time to figure out all the properties
@@ -418,12 +446,15 @@ setMethod("rand", "MixedTypeEngine", function(object, n,
   ## 3. convert from continuous to mixed-type
   binned <- chop(object, as.data.frame(t(hazy)))
   if (keepall) {
-    binned <- list(raw = dataset$data, clinical = dataset$clinical,
-                   noisy = hazy, binned = binned)
+    value <- list(raw = dataset$data,
+                  clinical = dataset$clinical,
+                  noisy = hazy,
+                  binned = binned)
   } else {
-    binned <- list(raw = dataset$data, clinical = dataset$clinical)
+    value <- list(binned = binned,
+                  clinical = dataset$clinical)
   }
-  binned
+  value
 })
 
 

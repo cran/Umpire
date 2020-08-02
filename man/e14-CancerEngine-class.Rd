@@ -21,7 +21,9 @@ CancerEngine(cm, base, altered)
 \S4method{nComponents}{CancerEngine}(object, \dots)
 \S4method{rand}{CancerEngine}(object, n, \dots)
 ClinicalEngine(nFeatures, nClusters, isWeighted,
-               bHyp = NULL, survivalModel = NULL)
+               bHyp = NULL, survivalModel = NULL,
+               SURV = function(n) rnorm(n, 0, 0.3),
+               OUT = function(n) rnorm(n, 0, 0.3))
 }
 \arguments{
   \item{cm}{object of class \code{CancerModel}}
@@ -44,6 +46,8 @@ ClinicalEngine(nFeatures, nClusters, isWeighted,
     Values section below.}
   \item{survivalModel}{an object of the \code{\link{SurvivalModel}} class.
     If NULL, then it is constructed using the default parameters.}
+  \item{SURV}{a function; the same as used in a \code{\link{CancerModel}}.}
+  \item{OUT}{a function; the same as used in a \code{\link{CancerModel}}.}
 }
 \section{Objects from the Class}{
   Although objects of the class can be created by a direct call to

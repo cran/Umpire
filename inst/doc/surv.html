@@ -15,6 +15,22 @@
 
 <title>Umpire 2.0: Simulating Associated Survival</title>
 
+<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
+// v0.0.1
+// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
+
+document.addEventListener('DOMContentLoaded', function() {
+  const codeList = document.getElementsByClassName("sourceCode");
+  for (var i = 0; i < codeList.length; i++) {
+    var linkList = codeList[i].getElementsByTagName('a');
+    for (var j = 0; j < linkList.length; j++) {
+      if (linkList[j].innerHTML === "") {
+        linkList[j].setAttribute('aria-hidden', 'true');
+      }
+    }
+  }
+});
+</script>
 
 
 <style type="text/css">code{white-space: pre;}</style>
@@ -838,13 +854,13 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] survival_3.1-12 Umpire_2.0.3   
+## [1] survival_3.1-12 Umpire_2.0.9   
 ## 
 ## loaded via a namespace (and not attached):
 ##  [1] mclust_5.4.6       Rcpp_1.0.4.6       lattice_0.20-41    mvtnorm_1.1-0     
 ##  [5] digest_0.6.25      grid_4.0.0         mc2d_0.1-18        magrittr_1.5      
 ##  [9] evaluate_0.14      oompaBase_3.2.9    highr_0.8          rlang_0.4.5       
-## [13] stringi_1.4.6      Matrix_1.2-18      rmarkdown_2.1      splines_4.0.0     
+## [13] stringi_1.4.6      Matrix_1.2-18      rmarkdown_2.3      splines_4.0.0     
 ## [17] tools_4.0.0        stringr_1.4.0      xfun_0.13          yaml_2.2.1        
 ## [21] compiler_4.0.0     cluster_2.1.0      BimodalIndex_1.1.9 htmltools_0.4.0   
 ## [25] knitr_1.28</code></pre>
