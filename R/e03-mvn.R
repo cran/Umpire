@@ -20,10 +20,7 @@ MVN <- function(mu, Sigma, tol=1e-06) {
   p <- length(mu)
   if (!all(dim(Sigma) == c(p, p))) 
     stop("incompatible arguments")
-  ## :PLR: manpage recommends EISPACK=FALSE
-  ## KRC: And it also warns that the eigenvalues may differ
-  ## between platforms if you do that.
-  eS <- eigen(Sigma, symmetric = TRUE, EISPACK = TRUE)
+  eS <- eigen(Sigma, symmetric = TRUE)
   ev <- eS$values
 # JX: why not just all(ev>0)?
 # KRC: because an eigenvalue of 10^-15 is essentially zero. Without
@@ -44,8 +41,7 @@ setMethod("rand", "MVN", function(object, n, ...) {
   p <- length(object@mu)
 # JX: n is the number of samples. X is generated as n*p. Should it be p*n?
   X <- matrix(rnorm(p * n), n)
-  drop(object@mu) + object@half %*%
-    diag(object@lambda, p) %*%  t(X)
+  drop(object@mu) + object@half %*%  diag(object@lambda, p) %*%  t(X)
 })
 
 setMethod("nrow", "MVN", function(x) {
@@ -69,8 +65,8 @@ setMethod("summary", "MVN", function(object, ...) {
 covar <- function(object) {
   if (!inherits(object, "MVN"))
     stop("'object' must be derived from class 'MVN'.")
-  Y <- diag(object@lambda) %*% object@half
-  t(Y) %*% Y
+  Y <- object@half %*% diag(object@lambda)
+  Y %*% t(Y)
 }
 
 # This is the correlation matrix that underlies the covariance
