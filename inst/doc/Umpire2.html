@@ -15,162 +15,103 @@
 
 <title>Umpire 2.0: Clinically Realistic Simulations</title>
 
-<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
-// v0.0.1
-// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
-
-document.addEventListener('DOMContentLoaded', function() {
-  const codeList = document.getElementsByClassName("sourceCode");
-  for (var i = 0; i < codeList.length; i++) {
-    var linkList = codeList[i].getElementsByTagName('a');
-    for (var j = 0; j < linkList.length; j++) {
-      if (linkList[j].innerHTML === "") {
-        linkList[j].setAttribute('aria-hidden', 'true');
-      }
-    }
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
   }
 });
 </script>
 
 <style type="text/css">
-  code{white-space: pre-wrap;}
-  span.smallcaps{font-variant: small-caps;}
-  span.underline{text-decoration: underline;}
-  div.column{display: inline-block; vertical-align: top; width: 50%;}
-  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-  ul.task-list{list-style: none;}
-      code.sourceCode > span { display: inline-block; line-height: 1.25; }
-  code.sourceCode > span { color: inherit; text-decoration: inherit; }
-  code.sourceCode > span:empty { height: 1.2em; }
-  .sourceCode { overflow: visible; }
-  code.sourceCode { white-space: pre; position: relative; }
-  div.sourceCode { margin: 1em 0; }
-  pre.sourceCode { margin: 0; }
-  @media screen {
-  div.sourceCode { overflow: auto; }
-  }
-  @media print {
-  code.sourceCode { white-space: pre-wrap; }
-  code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-  }
-  pre.numberSource code
-    { counter-reset: source-line 0; }
-  pre.numberSource code > span
-    { position: relative; left: -4em; counter-increment: source-line; }
-  pre.numberSource code > span > a:first-child::before
-    { content: counter(source-line);
-      position: relative; left: -1em; text-align: right; vertical-align: baseline;
-      border: none; display: inline-block;
-      -webkit-touch-callout: none; -webkit-user-select: none;
-      -khtml-user-select: none; -moz-user-select: none;
-      -ms-user-select: none; user-select: none;
-      padding: 0 4px; width: 4em;
-      color: #aaaaaa;
-    }
-  pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
-  div.sourceCode
-    {   }
-  @media screen {
-  code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-  }
-  code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-  code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-  code span.at { color: #7d9029; } /* Attribute */
-  code span.bn { color: #40a070; } /* BaseN */
-  code span.bu { } /* BuiltIn */
-  code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-  code span.ch { color: #4070a0; } /* Char */
-  code span.cn { color: #880000; } /* Constant */
-  code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-  code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-  code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-  code span.dt { color: #902000; } /* DataType */
-  code span.dv { color: #40a070; } /* DecVal */
-  code span.er { color: #ff0000; font-weight: bold; } /* Error */
-  code span.ex { } /* Extension */
-  code span.fl { color: #40a070; } /* Float */
-  code span.fu { color: #06287e; } /* Function */
-  code span.im { } /* Import */
-  code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-  code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-  code span.op { color: #666666; } /* Operator */
-  code span.ot { color: #007020; } /* Other */
-  code span.pp { color: #bc7a00; } /* Preprocessor */
-  code span.sc { color: #4070a0; } /* SpecialChar */
-  code span.ss { color: #bb6688; } /* SpecialString */
-  code span.st { color: #4070a0; } /* String */
-  code span.va { color: #19177c; } /* Variable */
-  code span.vs { color: #4070a0; } /* VerbatimString */
-  code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-    </style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
 
 
-<style type="text/css">code{white-space: pre;}</style>
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
 <style type="text/css" data-origin="pandoc">
-code.sourceCode > span { display: inline-block; line-height: 1.25; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-code.sourceCode > span:empty { height: 1.2em; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
-  { counter-reset: source-line 0; }
+{ counter-reset: source-line 0; }
 pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
+{ position: relative; left: -4em; counter-increment: source-line; }
 pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-    color: #aaaaaa;
-  }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
 </style>
 <script>
 // apply pandoc div.sourceCode style to pre.sourceCode instead
@@ -179,13 +120,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   for (var i = 0; i < sheets.length; i++) {
     if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
     try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    for (var j = 0; j < rules.length; j++) {
+    var j = 0;
+    while (j < rules.length) {
       var rule = rules[j];
       // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
       var style = rule.style.cssText;
       // check if color or background-color is set
-      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
       // replace div.sourceCode by a pre.sourceCode rule
       sheets[i].deleteRule(j);
       sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
@@ -193,6 +141,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   }
 })();
 </script>
+
 
 
 
@@ -388,27 +337,52 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 
 
-<h1 class="title toc-ignore">Umpire 2.0: Clinically Realistic Simulations</h1>
+<h1 class="title toc-ignore">Umpire 2.0: Clinically Realistic
+Simulations</h1>
 <h4 class="author">Kevin R. Coombes and Caitlin E. Coombes</h4>
 
 
 
 <div id="introduction" class="section level1">
 <h1>Introduction</h1>
-<p>Version 2.0 of the Ultimate Microarray Prediction, Inference, and Reality Engine (Umpire) extends the functions of the Umpire 1.0 R package to allow researchers to simulate realistic, mixed-type, clinical data. Statisticians, computer scientists, and clinical informaticians who develop and improve methods to analyze clinical data from a variety of contexts (including clinical trials, population cohorts, and electronic medical record sources) recognize that it is difficult to evaluate methods on real data where “ground truth” is unknown. Frequently, they turn to simulations where the can control the underlying structure, which can result in simulations which are too simplistic to reflect complex clinical data realities. Clinical measurements on patients may be treated as independent, in spite of the elaborate correlation structures that arise in networks, pathways, organ systems, and syndromes in real biology. Further, the researcher finds limited tools at her disposal to facilitate simulation of binary, categorical, or mixed data at this representative level of biological complexity.</p>
-<p>In this vignette, we describe a workflow with the <tt>Umpire</tt> package to simulate biologically realistic, mixed-type clinical data.</p>
+<p>Version 2.0 of the Ultimate Microarray Prediction, Inference, and
+Reality Engine (Umpire) extends the functions of the Umpire 1.0 R
+package to allow researchers to simulate realistic, mixed-type, clinical
+data. Statisticians, computer scientists, and clinical informaticians
+who develop and improve methods to analyze clinical data from a variety
+of contexts (including clinical trials, population cohorts, and
+electronic medical record sources) recognize that it is difficult to
+evaluate methods on real data where “ground truth” is unknown.
+Frequently, they turn to simulations where the can control the
+underlying structure, which can result in simulations which are too
+simplistic to reflect complex clinical data realities. Clinical
+measurements on patients may be treated as independent, in spite of the
+elaborate correlation structures that arise in networks, pathways, organ
+systems, and syndromes in real biology. Further, the researcher finds
+limited tools at her disposal to facilitate simulation of binary,
+categorical, or mixed data at this representative level of biological
+complexity.</p>
+<p>In this vignette, we describe a workflow with the <tt>Umpire</tt>
+package to simulate biologically realistic, mixed-type clinical
+data.</p>
 <p>As usual, we start by loading the package:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(Umpire)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Umpire)</span></code></pre></div>
 </div>
 <div id="simulating-mixed-type-clinical-data" class="section level1">
 <h1>Simulating Mixed-Type Clinical Data</h1>
-<p>Since we are going to run simulations, for reproducibility purposes, we should set the seed of the random number generator.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">set.seed</span>(<span class="dv">84503</span>)</span></code></pre></div>
+<p>Since we are going to run simulations, for reproducibility purposes,
+we should set the seed of the random number generator.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">84503</span>)</span></code></pre></div>
 <div id="model-subtypes-and-survival" class="section level2">
 <h2>Model Subtypes and Survival</h2>
-<p>The simulation workflow begins by simulating complex, correlated, continuous data with known “ground truth” by instantiating a <tt>ClinicalEngine</tt>. We simulate 20 features and 4 clusters of unequal size. The ClinicalEngine generates subtypes (clusters) with known “ground truth” through an implementation of the Umpire 1.0 <tt>CancerModel</tt> and <tt>CancerEngine</tt>.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>ce &lt;-<span class="st"> </span><span class="kw">ClinicalEngine</span>(<span class="dv">20</span>, <span class="dv">4</span>, <span class="dt">isWeighted =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb3-2"><a href="#cb3-2"></a><span class="kw">summary</span>(ce)</span></code></pre></div>
+<p>The simulation workflow begins by simulating complex, correlated,
+continuous data with known “ground truth” by instantiating a
+<tt>ClinicalEngine</tt>. We simulate 20 features and 4 clusters of
+unequal size. The ClinicalEngine generates subtypes (clusters) with
+known “ground truth” through an implementation of the Umpire 1.0
+<tt>CancerModel</tt> and <tt>CancerEngine</tt>.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>ce <span class="ot">&lt;-</span> <span class="fu">ClinicalEngine</span>(<span class="dv">20</span>, <span class="dv">4</span>, <span class="at">isWeighted =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(ce)</span></code></pre></div>
 <pre><code>## A &#39;CancerEngine&#39; using the cancer model:
 ## --------------
 ## Clinical Simulation Model (Raw), a CancerModel object constructed via:
@@ -434,23 +408,34 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 ## 
 ## Altered expression given by:
 ## An Engine with 10 components.</code></pre>
-<p>Note that the prevalences are not equal; when you use <tt>isweighted = TRUE</tt>, they are chosen from a Dirichlet distribution. Note also that the <tt>summary</tt> function describes the object as a <tt>CancerEngine</tt>, since the same underlying structure is used to implement a <tt>ClinicalEngine</tt>.</p>
-<p>Now we confirm that the model expects to produce the 20 features that we requested. It will do so using 10 “components”, where each component consists of a pair of correlated features.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw">nrow</span>(ce)</span></code></pre></div>
+<p>Note that the prevalences are not equal; when you use <tt>isweighted
+= TRUE</tt>, they are chosen from a Dirichlet distribution. Note also
+that the <tt>summary</tt> function describes the object as a
+<tt>CancerEngine</tt>, since the same underlying structure is used to
+implement a <tt>ClinicalEngine</tt>.</p>
+<p>Now we confirm that the model expects to produce the 20 features that
+we requested. It will do so using 10 “components”, where each component
+consists of a pair of correlated features.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(ce)</span></code></pre></div>
 <pre><code>## [1] 20</code></pre>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">nComponents</span>(ce)</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nComponents</span>(ce)</span></code></pre></div>
 <pre><code>## [1] 10</code></pre>
 </div>
 <div id="simulate-raw-data" class="section level2">
 <h2>Simulate Raw Data</h2>
-<p>The <tt>ClinicalEngine</tt> is used to simulate the raw, base dataset.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>dset &lt;-<span class="st"> </span><span class="kw">rand</span>(ce, <span class="dv">300</span>)</span></code></pre></div>
-<p>Data are simulated as a list with two objects: simulated <tt>data</tt> and associated <tt>clinical</tt> information, including “ground truth” subtype membership and survival data (outcome, length of followup, and occurrence of event of interest within the followup period).</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="kw">class</span>(dset)</span></code></pre></div>
+<p>The <tt>ClinicalEngine</tt> is used to simulate the raw, base
+dataset.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>dset <span class="ot">&lt;-</span> <span class="fu">rand</span>(ce, <span class="dv">300</span>)</span></code></pre></div>
+<p>Data are simulated as a list with two objects: simulated
+<tt>data</tt> and associated <tt>clinical</tt> information, including
+“ground truth” subtype membership and survival data (outcome, length of
+followup, and occurrence of event of interest within the followup
+period).</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(dset)</span></code></pre></div>
 <pre><code>## [1] &quot;list&quot;</code></pre>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="kw">names</span>(dset)</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(dset)</span></code></pre></div>
 <pre><code>## [1] &quot;clinical&quot; &quot;data&quot;</code></pre>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="kw">summary</span>(dset<span class="op">$</span>clinical)</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(dset<span class="sc">$</span>clinical)</span></code></pre></div>
 <pre><code>##  CancerSubType   Outcome         LFU          Event        
 ##  Min.   :1.000   Bad :151   Min.   : 0.00   Mode :logical  
 ##  1st Qu.:1.000   Good:149   1st Qu.:19.75   FALSE:197      
@@ -458,41 +443,68 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 ##  Mean   :2.717              Mean   :33.81                  
 ##  3rd Qu.:4.000              3rd Qu.:49.00                  
 ##  Max.   :4.000              Max.   :71.00</code></pre>
-<p>The raw <tt>data</tt> are simulated as a matrix of continuous values.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="kw">class</span>(dset<span class="op">$</span>data)</span></code></pre></div>
+<p>The raw <tt>data</tt> are simulated as a matrix of continuous
+values.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(dset<span class="sc">$</span>data)</span></code></pre></div>
 <pre><code>## [1] &quot;matrix&quot; &quot;array&quot;</code></pre>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="kw">dim</span>(dset<span class="op">$</span>data)</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(dset<span class="sc">$</span>data)</span></code></pre></div>
 <pre><code>## [1]  20 300</code></pre>
 </div>
 <div id="apply-clinically-realistic-noise" class="section level2">
 <h2>Apply Clinically Realistic Noise</h2>
-<p>The user may add further additive noise to the raw data. The <tt>ClinicalNoiseModel</tt> simulates additive noise for each feature <em>f</em> and patient <em>i</em> as a normal distribution <span class="math inline">\(E_{fi} \sim N(0, \tau)\)</span> , where the standard deviation <span class="math inline">\(\tau\)</span> varies with a hyperparameter along the gamma distribution <span class="math inline">\(\tau \sim Gamma(shape, scale)\)</span>. Thus, the ClinicalNoiseModel generates many features with low noise (such as a tightly calibrated laboratory test) and some features with high noise (such as a blood pressure measured by hand and manually entered into the medical record.) The user may apply default parameters or individual parameters. Next, the <tt>ClinicalNoiseModel</tt> is applied to <tt>blur</tt> the previously simulated data. The default model below generates a low overall level of additive noise.</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a>cnm &lt;-<span class="st"> </span><span class="kw">ClinicalNoiseModel</span>(<span class="kw">nrow</span>(ce<span class="op">@</span>localenv<span class="op">$</span>eng), <span class="dt">shape =</span> <span class="fl">1.02</span>, <span class="dt">scale =</span> <span class="fl">0.05</span>)</span>
-<span id="cb20-2"><a href="#cb20-2"></a><span class="kw">summary</span>(cnm)</span></code></pre></div>
+<p>The user may add further additive noise to the raw data. The
+<tt>ClinicalNoiseModel</tt> simulates additive noise for each feature
+<em>f</em> and patient <em>i</em> as a normal distribution <span class="math inline">\(E_{fi} \sim N(0, \tau)\)</span> , where the
+standard deviation <span class="math inline">\(\tau\)</span> varies with
+a hyperparameter along the gamma distribution <span class="math inline">\(\tau \sim Gamma(shape, scale)\)</span>. Thus, the
+ClinicalNoiseModel generates many features with low noise (such as a
+tightly calibrated laboratory test) and some features with high noise
+(such as a blood pressure measured by hand and manually entered into the
+medical record.) The user may apply default parameters or individual
+parameters. Next, the <tt>ClinicalNoiseModel</tt> is applied to
+<tt>blur</tt> the previously simulated data. The default model below
+generates a low overall level of additive noise.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>cnm <span class="ot">&lt;-</span> <span class="fu">ClinicalNoiseModel</span>(<span class="fu">nrow</span>(ce<span class="sc">@</span>localenv<span class="sc">$</span>eng), <span class="at">shape =</span> <span class="fl">1.02</span>, <span class="at">scale =</span> <span class="fl">0.05</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cnm)</span></code></pre></div>
 <pre><code>## A &#39;NoiseModel&#39; with:
 ##   additive offset = 0
 ##   additive scale distributed as:
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ## 0.00601 0.03036 0.05852 0.06958 0.09856 0.18595 
 ##   multiplicative scale = 0</code></pre>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a>noisy &lt;-<span class="st"> </span><span class="kw">blur</span>(cnm, dset<span class="op">$</span>data)</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>noisy <span class="ot">&lt;-</span> <span class="fu">blur</span>(cnm, dset<span class="sc">$</span>data)</span></code></pre></div>
 </div>
 <div id="simulate-mixed-type-data" class="section level2">
 <h2>Simulate Mixed-Type Data</h2>
-<p><tt>Umpire 2.0</tt> allows the simulation of binary, nominal, and ordinal data from raw, continuous data in variable, user-defined mixtures. The user defines prevalences, summing to 1, of binary, continuous, and categorical data in the desired final mixture. For categorical features, the user may tune the percent of categorical data desired to be nominal and the range of the number of categories to be simulated.</p>
-<p>The data simulated above by the <tt>ClinicalEngine</tt> and <tt>ClinicalNoiseModel</tt> takes rows (not columns) as features, as an omics convention. Thus, by default, when generating data, rows are treated as features and columns as patients. The <tt>makeDataTypes</tt> method transposes its results to a data frame where the columns are features and the rows are patients. This transposition both fits better with the conventions used for clinical data, but also supports the ability to store different kinds of (mixed-type) data in different columns.</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a>dt &lt;-<span class="st"> </span><span class="kw">makeDataTypes</span>(dset<span class="op">$</span>data,</span>
-<span id="cb23-2"><a href="#cb23-2"></a>                   <span class="dt">pCont =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">3</span>, <span class="dt">pBin =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">3</span>, <span class="dt">pCat =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">3</span>,</span>
-<span id="cb23-3"><a href="#cb23-3"></a>                   <span class="dt">pNominal =</span> <span class="fl">0.5</span>, <span class="dt">range =</span> <span class="dv">3</span><span class="op">:</span><span class="dv">9</span>,</span>
-<span id="cb23-4"><a href="#cb23-4"></a>                   <span class="dt">inputRowsAreFeatures =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb23-5"><a href="#cb23-5"></a><span class="kw">names</span>(dt)</span></code></pre></div>
+<p><tt>Umpire 2.0</tt> allows the simulation of binary, nominal, and
+ordinal data from raw, continuous data in variable, user-defined
+mixtures. The user defines prevalences, summing to 1, of binary,
+continuous, and categorical data in the desired final mixture. For
+categorical features, the user may tune the percent of categorical data
+desired to be nominal and the range of the number of categories to be
+simulated.</p>
+<p>The data simulated above by the <tt>ClinicalEngine</tt> and
+<tt>ClinicalNoiseModel</tt> takes rows (not columns) as features, as an
+omics convention. Thus, by default, when generating data, rows are
+treated as features and columns as patients. The <tt>makeDataTypes</tt>
+method transposes its results to a data frame where the columns are
+features and the rows are patients. This transposition both fits better
+with the conventions used for clinical data, but also supports the
+ability to store different kinds of (mixed-type) data in different
+columns.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>dt <span class="ot">&lt;-</span> <span class="fu">makeDataTypes</span>(dset<span class="sc">$</span>data,</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">pCont =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">3</span>, <span class="at">pBin =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">3</span>, <span class="at">pCat =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">3</span>,</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">pNominal =</span> <span class="fl">0.5</span>, <span class="at">range =</span> <span class="dv">3</span><span class="sc">:</span><span class="dv">9</span>,</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">inputRowsAreFeatures =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(dt)</span></code></pre></div>
 <pre><code>## [1] &quot;binned&quot;    &quot;cutpoints&quot;</code></pre>
-<p>The <tt>makeDataTypes</tt> function generates a list containing two objects: a data.frame of mixed-type data…</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a><span class="kw">class</span>(dt<span class="op">$</span>binned)</span></code></pre></div>
+<p>The <tt>makeDataTypes</tt> function generates a list containing two
+objects: a data.frame of mixed-type data…</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(dt<span class="sc">$</span>binned)</span></code></pre></div>
 <pre><code>## [1] &quot;data.frame&quot;</code></pre>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="kw">dim</span>(dt<span class="op">$</span>binned)</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(dt<span class="sc">$</span>binned)</span></code></pre></div>
 <pre><code>## [1] 300  20</code></pre>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a><span class="kw">summary</span>(dt<span class="op">$</span>binned)</span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(dt<span class="sc">$</span>binned)</span></code></pre></div>
 <pre><code>##  V1           V2              V3               V4               V5      
 ##  R:52   Min.   :5.191   Min.   :0.0000   Min.   :0.0000   Min.   :0.00  
 ##  S:55   1st Qu.:6.490   1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:0.00  
@@ -525,8 +537,10 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 ##  3rd Qu.:4.912   3rd Qu.:7.608   E:47   3rd Qu.:6.190  
 ##  Max.   :6.610   Max.   :8.738   F:48   Max.   :8.570  
 ##                                  G:45</code></pre>
-<p>The <tt>cutpoints</tt> contain a record, for each feature, of data type, break points, and labels. Here are two examples of the kind of information stored for a cutpoint.</p>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a>dt<span class="op">$</span>cutpoints[[<span class="dv">1</span>]]</span></code></pre></div>
+<p>The <tt>cutpoints</tt> contain a record, for each feature, of data
+type, break points, and labels. Here are two examples of the kind of
+information stored for a cutpoint.</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>dt<span class="sc">$</span>cutpoints[[<span class="dv">1</span>]]</span></code></pre></div>
 <pre><code>## $breaks
 ##        0% 10.55853% 28.88869% 48.54916% 66.07294% 82.94035%      100% 
 ##      -Inf  4.055293  4.728019  5.149966  5.491690  5.900582       Inf 
@@ -536,7 +550,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 ## 
 ## $Type
 ## [1] &quot;nominal&quot;</code></pre>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a>dt<span class="op">$</span>cutpoints[[<span class="dv">5</span>]]</span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>dt<span class="sc">$</span>cutpoints[[<span class="dv">5</span>]]</span></code></pre></div>
 <pre><code>## $breaks
 ## [1]    -Inf 7.35767     Inf
 ## 
@@ -546,29 +560,34 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 ## $Type
 ## [1] &quot;symmetric binary&quot;</code></pre>
 <p>And here is an overview of the number of features of each type.</p>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1"></a>cp &lt;-<span class="st"> </span>dt<span class="op">$</span>cutpoints</span>
-<span id="cb35-2"><a href="#cb35-2"></a>type &lt;-<span class="st"> </span><span class="kw">sapply</span>(cp, <span class="cf">function</span>(X) { X<span class="op">$</span>Type })</span>
-<span id="cb35-3"><a href="#cb35-3"></a><span class="kw">table</span>(type)</span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>cp <span class="ot">&lt;-</span> dt<span class="sc">$</span>cutpoints</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>type <span class="ot">&lt;-</span> <span class="fu">sapply</span>(cp, <span class="cf">function</span>(X) { X<span class="sc">$</span>Type })</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(type)</span></code></pre></div>
 <pre><code>## type
 ## asymmetric binary        continuous           nominal           ordinal 
 ##                 1                 8                 3                 2 
 ##  symmetric binary 
 ##                 6</code></pre>
-<p>The <tt>cupoitns</tt> should be saved for downstream use in the <tt>MixedTypeEngine</tt>.</p>
+<p>The <tt>cupoitns</tt> should be saved for downstream use in the
+<tt>MixedTypeEngine</tt>.</p>
 </div>
 <div id="the-mixedtypeengine" class="section level2">
 <h2>The MixedTypeEngine</h2>
-<p>The many parameters defining a simulated data mixture can be stored as a single <tt>MixedTypeEngine</tt> for downstream use to easily generate future datasets with the same simulation parameters.</p>
-<p>The <tt>MixedTypeEngine</tt> stores the following components for re-implementation:</p>
+<p>The many parameters defining a simulated data mixture can be stored
+as a single <tt>MixedTypeEngine</tt> for downstream use to easily
+generate future datasets with the same simulation parameters.</p>
+<p>The <tt>MixedTypeEngine</tt> stores the following components for
+re-implementation:</p>
 <ol style="list-style-type: decimal">
-<li>The <tt>ClinicalEngine</tt>, including parameters for generating the subtype pattern and survival model.</li>
+<li>The <tt>ClinicalEngine</tt>, including parameters for generating the
+subtype pattern and survival model.</li>
 <li>The <tt>ClinicalNoiseModel</tt>.</li>
 <li>The <tt>cutpoints</tt> generated by <tt>makeDataTypes</tt>.</li>
 </ol>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1"></a>mte &lt;-<span class="st"> </span><span class="kw">MixedTypeEngine</span>(ce,</span>
-<span id="cb37-2"><a href="#cb37-2"></a>                       <span class="dt">noise =</span> cnm,</span>
-<span id="cb37-3"><a href="#cb37-3"></a>                       <span class="dt">cutpoints =</span> dt<span class="op">$</span>cutpoints)</span>
-<span id="cb37-4"><a href="#cb37-4"></a><span class="kw">summary</span>(mte)</span></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>mte <span class="ot">&lt;-</span> <span class="fu">MixedTypeEngine</span>(ce,</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">noise =</span> cnm,</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">cutpoints =</span> dt<span class="sc">$</span>cutpoints)</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mte)</span></code></pre></div>
 <pre><code>## A &#39;MixedTypeEngine&#39; (MTE) based on:
 ## A &#39;CancerEngine&#39; using the cancer model:
 ## --------------
@@ -611,14 +630,15 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 ##                 1                 8                 3                 2 
 ##  symmetric binary 
 ##                 6</code></pre>
-<p>With <tt>rand</tt>, the user can easily generate new data sets with the same simulation parameters.</p>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1"></a>dset2 &lt;-<span class="st"> </span><span class="kw">rand</span>(mte, <span class="dv">20</span>)</span>
-<span id="cb40-2"><a href="#cb40-2"></a><span class="kw">class</span>(dset2)</span></code></pre></div>
+<p>With <tt>rand</tt>, the user can easily generate new data sets with
+the same simulation parameters.</p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>dset2 <span class="ot">&lt;-</span> <span class="fu">rand</span>(mte, <span class="dv">20</span>)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(dset2)</span></code></pre></div>
 <pre><code>## [1] &quot;list&quot;</code></pre>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1"></a><span class="kw">summary</span>(dset2<span class="op">$</span>data)</span></code></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(dset2<span class="sc">$</span>data)</span></code></pre></div>
 <pre><code>## Length  Class   Mode 
 ##      0   NULL   NULL</code></pre>
-<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1"></a><span class="kw">summary</span>(dset2<span class="op">$</span>clinical)</span></code></pre></div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(dset2<span class="sc">$</span>clinical)</span></code></pre></div>
 <pre><code>##  CancerSubType Outcome        LFU          Event        
 ##  Min.   :1.0   Bad :14   Min.   : 7.00   Mode :logical  
 ##  1st Qu.:2.0   Good: 6   1st Qu.:18.75   FALSE:13       
@@ -626,16 +646,18 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 ##  Mean   :2.9             Mean   :37.35                  
 ##  3rd Qu.:4.0             3rd Qu.:54.75                  
 ##  Max.   :4.0             Max.   :70.00</code></pre>
-<p>By using the <tt>keepal</tt> argument othe function, you can keep the intermediate datasets produced by the <tt>rand</tt> method.</p>
-<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1"></a>dset3 &lt;-<span class="st"> </span><span class="kw">rand</span>(mte, <span class="dv">25</span>, <span class="dt">keepall =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb46-2"><a href="#cb46-2"></a><span class="kw">class</span>(dset3)</span></code></pre></div>
+<p>By using the <tt>keepal</tt> argument othe function, you can keep the
+intermediate datasets produced by the <tt>rand</tt> method.</p>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>dset3 <span class="ot">&lt;-</span> <span class="fu">rand</span>(mte, <span class="dv">25</span>, <span class="at">keepall =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(dset3)</span></code></pre></div>
 <pre><code>## [1] &quot;list&quot;</code></pre>
-<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1"></a><span class="kw">names</span>(dset3)</span></code></pre></div>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(dset3)</span></code></pre></div>
 <pre><code>## [1] &quot;raw&quot;      &quot;clinical&quot; &quot;noisy&quot;    &quot;binned&quot;</code></pre>
-<p>The <tt>raw</tt> and <tt>noisy</tt> elements have the rows as (future clinical) features and the columns as patients/samples.</p>
-<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1"></a><span class="kw">dim</span>(dset3<span class="op">$</span>raw)</span></code></pre></div>
+<p>The <tt>raw</tt> and <tt>noisy</tt> elements have the rows as (future
+clinical) features and the columns as patients/samples.</p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(dset3<span class="sc">$</span>raw)</span></code></pre></div>
 <pre><code>## [1] 20 25</code></pre>
-<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1"></a><span class="kw">summary</span>(<span class="kw">t</span>(dset3<span class="op">$</span>raw))</span></code></pre></div>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">t</span>(dset3<span class="sc">$</span>raw))</span></code></pre></div>
 <pre><code>##        V1              V2              V3              V4        
 ##  Min.   :4.028   Min.   :5.816   Min.   :1.901   Min.   : 8.537  
 ##  1st Qu.:4.535   1st Qu.:6.560   1st Qu.:2.348   1st Qu.: 9.466  
@@ -671,9 +693,9 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 ##  Mean   :4.745   Mean   :7.391   Mean   :7.217   Mean   :5.511  
 ##  3rd Qu.:5.095   3rd Qu.:7.713   3rd Qu.:7.461   3rd Qu.:5.980  
 ##  Max.   :6.312   Max.   :8.652   Max.   :7.832   Max.   :6.405</code></pre>
-<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1"></a><span class="kw">dim</span>(<span class="kw">t</span>(dset3<span class="op">$</span>noisy))</span></code></pre></div>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(<span class="fu">t</span>(dset3<span class="sc">$</span>noisy))</span></code></pre></div>
 <pre><code>## [1] 25 20</code></pre>
-<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1"></a><span class="kw">summary</span>(dset3<span class="op">$</span>noisy)</span></code></pre></div>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(dset3<span class="sc">$</span>noisy)</span></code></pre></div>
 <pre><code>##        V1               V2               V3               V4        
 ##  Min.   : 2.287   Min.   : 2.790   Min.   : 3.404   Min.   : 2.941  
 ##  1st Qu.: 5.653   1st Qu.: 5.500   1st Qu.: 5.874   1st Qu.: 4.558  
@@ -724,15 +746,16 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 ##  3rd Qu.: 7.322  
 ##  Max.   :10.860</code></pre>
 <p>Noisy data arises by adding simulated noise to the raw data.</p>
-<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1"></a><span class="kw">plot</span>(dset3<span class="op">$</span>raw[<span class="dv">5</span>,], dset3<span class="op">$</span>noisy[<span class="dv">5</span>,], <span class="dt">xlab =</span> <span class="st">&quot;Raw&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Noisy&quot;</span>, <span class="dt">pch=</span><span class="dv">16</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(dset3<span class="sc">$</span>raw[<span class="dv">5</span>,], dset3<span class="sc">$</span>noisy[<span class="dv">5</span>,], <span class="at">xlab =</span> <span class="st">&quot;Raw&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;Noisy&quot;</span>, <span class="at">pch=</span><span class="dv">16</span>)</span></code></pre></div>
 <div class="figure">
-<img src="data:image/png;base64,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" alt />
+<img src="data:image/png;base64,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" alt />
 <p class="caption">Raw and noisy data.</p>
 </div>
-<p>The <tt>binned</tt> element has columns as features and rows as samples. Binned data arises by applying cut points to noisy data.</p>
-<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1"></a><span class="kw">dim</span>(dset3<span class="op">$</span>binned)</span></code></pre></div>
+<p>The <tt>binned</tt> element has columns as features and rows as
+samples. Binned data arises by applying cut points to noisy data.</p>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(dset3<span class="sc">$</span>binned)</span></code></pre></div>
 <pre><code>## [1] 25 20</code></pre>
-<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1"></a><span class="kw">summary</span>(dset3<span class="op">$</span>binned)</span></code></pre></div>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(dset3<span class="sc">$</span>binned)</span></code></pre></div>
 <pre><code>##  V1          V2        V3     V4     V5           V6              V7       
 ##  R:6   Min.   :5.878   0:12   0:11   0:12   Min.   :2.921   Min.   :6.165  
 ##  S:7   1st Qu.:6.477   1:13   1:14   1:13   1st Qu.:3.418   1st Qu.:6.821  
@@ -757,9 +780,9 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 ##  B      :3          3rd Qu.:5.105   3rd Qu.:7.768   E:6   3rd Qu.:5.971  
 ##  H      :3          Max.   :6.333   Max.   :8.630   F:4   Max.   :6.361  
 ##  (Other):3                                          G:0</code></pre>
-<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1"></a><span class="kw">plot</span>(dset3<span class="op">$</span>binned[,<span class="dv">5</span>], dset3<span class="op">$</span>noisy[<span class="dv">5</span>,], <span class="dt">xlab =</span> <span class="st">&quot;Binned&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Noisy&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(dset3<span class="sc">$</span>binned[,<span class="dv">5</span>], dset3<span class="sc">$</span>noisy[<span class="dv">5</span>,], <span class="at">xlab =</span> <span class="st">&quot;Binned&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;Noisy&quot;</span>)</span></code></pre></div>
 <div class="figure">
-<img src="data:image/png;base64,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" alt />
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASAAAAEgCAMAAAAjXV6yAAAATlBMVEUAAAAAADoAAGYAOpAAZrY6AAA6ADo6AGY6ZmY6kNtmAABmtrZmtv+QOgCQkGaQ2/+2ZgC2///T09PbkDrb////tmb/25D//7b//9v///+nQblkAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAGO0lEQVR4nO2da3uiOABG6bTurq7dOkPx8v//6BKQdkYNLyEJweSc5+nYD8wbPYVcIInVBUapUr+BtYMgAYIECBIgSIAgAYIECBIgSIAgAYIECBIgSIAgAYIECBIgSIAgAYIECBIgSIAgAYIECBIgSIAgAYIECBIgSIAgAYIECBIgSIAgAYIECBIgSIAgAYIECBIgSIAgAYIECBIgSIAgAYIECBIgSIAgAYIECBIgSIAgAYIECBIgSIAgAYIECBIgSIAgAYIECBIgSIAgAYIECBIgSIAgAYIECBIgSIAgAYIECBK4CDrttu2/TVVVP37Gej+rw1lQ/fppfttb4p6GWIKuajpNnnFJiSbouOkENZaLDEGcQSOcdubifbsM1bVnnC9etUwUQZfO0ctH25BZ/CQ9g5zKjiVo4bh4ZSMo1MEzP1G9wlZsVYJuU5z7X6kp8RJzAkGCSIIObTfo/N5eSZahWOl1kOk/H0xPcRUdRa+yowg6v7damrajuM6hRnpB3TisH6aucbCaXhBnkOKrDupUecelpMRWzAn6QYISBa2gDlo8Ll7ZCAp1MIJCpi4eF6/sEgU5gSABggRZCgr5ND5PQb98QBCCnljQMo99nlhQrLibcASJcASJcASJ8KSCTjvrpB+Xz+AfMRKe+Ayq20bI11HWgi4BHOUuqFfkMU08c0FN90Dn/G55KugaF5rEgswc1t6M7bmyU1wEUrdi3TNl38/gHzESnvYMCvMZwsbdhKcVZOb81MNV9pAJq31yFnR4/Txu3i6HN+uxU1b7TC13DmnvKJrP3LRt2EgNnXqtRnpBh1aObQb0Jf1qn7SC2mvrtHv9PO3GL7GkZ1DqSrp6+Ti/2/0kX+3zDM180tU+zyBo4bibcASJ8HSC2jqlr2CqiWP5JKt9ErdiYd56kLgFyPISC1n2HEHHTXsGeA7pcxbUt921dQq0qanknbSMBQ2T52195IsR9M9G3LHOWNAwQBeD1boa6WovK8ip1br7z5NLGX6ZdAZd7wfZHeXcik2pg7bDobbekviz+fzNwxKlFbMOUWeUO+PooETpByFowXJjFB6l6GEs9l0ReG2/laugbw4rfjYfkpmC2jPJ3ogFLTc1c5/N+25vl7egeuypYeByZxwdlBmCzu8BpphlLMi7+nErd8bRQXEW5F/9PCh3zo3RhYYeroLEIH1muX532X+tSFCkjmI+giKViyARh6CvlMf1KoJEHIJEHIJEHIJEHIJEHIJEHIJEHIJEHIJEHIJEXEa3O+KUiyARV5og59U+pdVBzqt9ShTktFajREFOq31KFMQZNILzap/SBF1cV/sUKMgtDkEirmBB01b7FCzoNuXx6ABBIg5BIq60weqlW1hv5ptbp5vnOz9oEp2fvz6CbU2Rm6Cu/9zv7RFmY4H8BO2HRUHztqZIWOfcvZXgBxrM2VMHPIMSEkfQaffj52/fgOQbl5JYzXzTXwvWCY3FC1o4Lh7JBD0NiQS5EbbwOB8FQUlSkxSOoEXT4qYmKRxBi6bFTU1SOIIWTYubmqTwDAU9AwgSIEiAIAGCBAgSIEiAIAGCBAgSIEiAIAGCBOkENd5bD//J8e8Q29fckUyQeXptfYI9A/NYPFjYb6QS1M8SGfmeHEfsu6d6kkpQv+Zj5Gtg3Giqrce3oo2RTJCZqObzVW93ZCaor35CVkIIUol5CeISEwSupC/ZCQrdzGcnKHhHMTtB5gsngw41shP0JCBIgCABggQIEiBIgCABggQIEiBIgCABggQIEiBIgCABggQIEiBIgCABggQIEiBIgCABggQIEiBIgCDBmgQdum1ZXsY2kfsm6MSHEVYlqNv3q572ycsVNOFb7Q0lC9pff/7dVdX3azdhpt/I2syc+a9YQWabvV5Qq6C93obX7ue42fb7XTZhJxfZWZWgfvOsVlMvaNtNZfzj1UyT6qc3HkoU1J1BTfX2dZmZf4bXvtJp7fRTycqtg8wV9FDQdXe2fV26oNoiaDDCGfT6+UjQV+fxOsW6WEFNtX9YB/VKDtfmrOBWbBhq3Anq+kHd5VVqP2iVIEiAIAGCBAgSIEiAIAGCBAgSIEiAIAGCBAgSIEiAIAGCBAgSIEiAIAGCBAgSIEiAIAGCBP8DYTGK7vMlfgEAAAAASUVORK5CYII=" alt />
 <p class="caption">Noisy and binned data.</p>
 </div>
 </div>

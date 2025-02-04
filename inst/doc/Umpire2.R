@@ -73,7 +73,7 @@ summary(t(dset3$raw))
 dim(t(dset3$noisy))
 summary(dset3$noisy)
 
-## ---- fig.cap="Raw and noisy data."-------------------------------------------
+## ----fig.cap="Raw and noisy data."--------------------------------------------
 plot(dset3$raw[5,], dset3$noisy[5,], xlab = "Raw", ylab = "Noisy", pch=16)
 
 ## ----fig.cap = "Noisy and binned data."---------------------------------------

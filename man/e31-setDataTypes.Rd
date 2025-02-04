@@ -83,7 +83,7 @@ getDaisyTypes(object)
   The \code{getDataTypes} function returns a character vector listing
   the type of data for each feature in a \code{MixedTypeEngine}. the
   \code{getDaisyTypes} function converts this vector to a list suitable
-  for input to the \code{\link{daisy}} function in the \code{cluster}
+  for input to the \code{\link[cluster]{daisy}} function in the \code{cluster}
   package.
 }
 \references{
